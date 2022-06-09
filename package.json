@@ -36,14 +36,12 @@
     "es"
   ],
   "sideEffects": [
-    "dist/*",
     "es/**/style/*",
     "lib/**/style/*",
     "*.less"
   ],
   "main": "lib/index.js",
   "module": "es/index.js",
-  "unpkg": "dist/antd.min.js",
   "typings": "lib/index.d.ts",
   "scripts": {
     "prepare": "husky install",
