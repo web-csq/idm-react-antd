@@ -95,8 +95,8 @@ interface ProviderChildrenProps extends ConfigProviderProps {
   legacyLocale: Locale;
 }
 
-export const defaultPrefixCls = 'ant';
-export const defaultIconPrefixCls = 'anticon';
+export const defaultPrefixCls = 'idm-react-ant';
+export const defaultIconPrefixCls = 'idm-react-anticon';
 let globalPrefixCls: string;
 let globalIconPrefixCls: string;
 
