@@ -243,7 +243,7 @@ Array [
       </label>
     </div>
   </div>,
-  "  ",
+    ,
   <div
     class="ant-segmented"
   >

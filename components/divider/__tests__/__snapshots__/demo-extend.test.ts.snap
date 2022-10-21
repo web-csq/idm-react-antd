@@ -107,7 +107,7 @@ Array [
 
 exports[`renders ./components/divider/demo/vertical.md extend context correctly 1`] = `
 Array [
-  "Text",
+  Text,
   <div
     class="ant-divider ant-divider-vertical"
     role="separator"

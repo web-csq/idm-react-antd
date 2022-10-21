@@ -13,9 +13,10 @@ import { composeRef } from 'rc-util/lib/ref';
 import * as React from 'react';
 import { ConfigContext } from '../../config-provider';
 import { useLocaleReceiver } from '../../locale-provider/LocaleReceiver';
-import Tooltip from '../../tooltip';
-import { isStyleSupport } from '../../_util/styleChecker';
 import TransButton from '../../_util/transButton';
+import { isStyleSupport } from '../../_util/styleChecker';
+import type { TooltipProps } from '../../tooltip';
+import Tooltip from '../../tooltip';
 import Editable from '../Editable';
 import useMergedConfig from '../hooks/useMergedConfig';
 import useUpdatedEffect from '../hooks/useUpdatedEffect';
@@ -55,10 +56,11 @@ export interface EllipsisConfig {
   symbol?: React.ReactNode;
   onExpand?: React.MouseEventHandler<HTMLElement>;
   onEllipsis?: (ellipsis: boolean) => void;
-  tooltip?: React.ReactNode;
+  tooltip?: React.ReactNode | TooltipProps;
 }
 
-export interface BlockProps extends TypographyProps {
+export interface BlockProps<C extends keyof JSX.IntrinsicElements = keyof JSX.IntrinsicElements>
+  extends TypographyProps<C> {
   title?: string;
   editable?: boolean | EditConfig;
   copyable?: boolean | CopyConfig;
@@ -105,17 +107,16 @@ function getNode(dom: React.ReactNode, defaultNode: React.ReactNode, needDom?: b
   return dom || (needDom && defaultNode);
 }
 
-function toList<T>(val: T | T[]): T[] {
+function toList<T extends any>(val: T | T[]): T[] {
+  if (val === false) {
+    return [false, false] as T[];
+  }
   return Array.isArray(val) ? val : [val];
-}
-
-interface InternalBlockProps extends BlockProps {
-  component: string;
 }
 
 const ELLIPSIS_STR = '...';
 
-const Base = React.forwardRef((props: InternalBlockProps, ref: any) => {
+const Base = React.forwardRef<HTMLElement, BlockProps>((props, ref) => {
   const {
     prefixCls: customizePrefixCls,
     className,
@@ -147,7 +148,7 @@ const Base = React.forwardRef((props: InternalBlockProps, ref: any) => {
     'strong',
     'keyboard',
     'italic',
-  ]) as any;
+  ]);
 
   // ========================== Editable ==========================
   const [enableEdit, editConfig] = useMergedConfig<EditConfig>(editable);
@@ -171,7 +172,7 @@ const Base = React.forwardRef((props: InternalBlockProps, ref: any) => {
     }
   }, [editing]);
 
-  const onEditClick = (e?: React.MouseEvent<HTMLDivElement>) => {
+  const onEditClick = (e?: React.MouseEvent<HTMLElement>) => {
     e?.preventDefault();
     triggerEdit(true);
   };
@@ -189,7 +190,7 @@ const Base = React.forwardRef((props: InternalBlockProps, ref: any) => {
   // ========================== Copyable ==========================
   const [enableCopy, copyConfig] = useMergedConfig<CopyConfig>(copyable);
   const [copied, setCopied] = React.useState(false);
-  const copyIdRef = React.useRef<NodeJS.Timeout>();
+  const copyIdRef = React.useRef<number>();
 
   const copyOptions: Pick<CopyConfig, 'format'> = {};
   if (copyConfig.format) {
@@ -197,7 +198,7 @@ const Base = React.forwardRef((props: InternalBlockProps, ref: any) => {
   }
 
   const cleanCopyId = () => {
-    clearTimeout(copyIdRef.current!);
+    window.clearTimeout(copyIdRef.current!);
   };
 
   const onCopyClick = (e?: React.MouseEvent<HTMLDivElement>) => {
@@ -210,7 +211,7 @@ const Base = React.forwardRef((props: InternalBlockProps, ref: any) => {
 
     // Trigger tips update
     cleanCopyId();
-    copyIdRef.current = setTimeout(() => {
+    copyIdRef.current = window.setTimeout(() => {
       setCopied(false);
     }, 3000);
 
@@ -226,6 +227,7 @@ const Base = React.forwardRef((props: InternalBlockProps, ref: any) => {
   const [expanded, setExpanded] = React.useState(false);
   const [isJsEllipsis, setIsJsEllipsis] = React.useState(false);
   const [isNativeEllipsis, setIsNativeEllipsis] = React.useState(false);
+  const [isNativeVisible, setIsNativeVisible] = React.useState(true);
   const [enableEllipsis, ellipsisConfig] = useMergedConfig<EllipsisConfig>(ellipsis, {
     expandable: false,
   });
@@ -280,8 +282,10 @@ const Base = React.forwardRef((props: InternalBlockProps, ref: any) => {
   };
 
   const [ellipsisWidth, setEllipsisWidth] = React.useState(0);
-  const onResize = ({ offsetWidth }: { offsetWidth: number }) => {
+  const [ellipsisFontSize, setEllipsisFontSize] = React.useState(0);
+  const onResize = ({ offsetWidth }: { offsetWidth: number }, element: HTMLElement) => {
     setEllipsisWidth(offsetWidth);
+    setEllipsisFontSize(parseInt(window.getComputedStyle?.(element).fontSize, 10) || 0);
   };
 
   // >>>>> JS Ellipsis
@@ -306,12 +310,45 @@ const Base = React.forwardRef((props: InternalBlockProps, ref: any) => {
         setIsNativeEllipsis(currentEllipsis);
       }
     }
-  }, [enableEllipsis, cssEllipsis, children, cssLineClamp]);
+  }, [enableEllipsis, cssEllipsis, children, cssLineClamp, isNativeVisible]);
+
+  // https://github.com/ant-design/ant-design/issues/36786
+  // Use IntersectionObserver to check if element is invisible
+  React.useEffect(() => {
+    const textEle = typographyRef.current;
+    if (
+      typeof IntersectionObserver === 'undefined' ||
+      !textEle ||
+      !cssEllipsis ||
+      !mergedEnableEllipsis
+    ) {
+      return;
+    }
+
+    /* eslint-disable-next-line compat/compat */
+    const observer = new IntersectionObserver(() => {
+      setIsNativeVisible(!!textEle.offsetParent);
+    });
+    observer.observe(textEle!);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [cssEllipsis, mergedEnableEllipsis]);
 
   // ========================== Tooltip ===========================
-  const tooltipTitle = ellipsisConfig.tooltip === true ? children : ellipsisConfig.tooltip;
+  let tooltipProps: TooltipProps = {};
+  if (ellipsisConfig.tooltip === true) {
+    tooltipProps = { title: children };
+  } else if (React.isValidElement(ellipsisConfig.tooltip)) {
+    tooltipProps = { title: ellipsisConfig.tooltip };
+  } else if (typeof ellipsisConfig.tooltip === 'object') {
+    tooltipProps = { title: children, ...ellipsisConfig.tooltip };
+  } else {
+    tooltipProps = { title: ellipsisConfig.tooltip };
+  }
   const topAriaLabel = React.useMemo(() => {
-    const isValid = (val: any) => ['string', 'number'].includes(typeof val);
+    const isValid = (val: any): val is string | number => ['string', 'number'].includes(typeof val);
 
     if (!enableEllipsis || cssEllipsis) {
       return undefined;
@@ -325,12 +362,12 @@ const Base = React.forwardRef((props: InternalBlockProps, ref: any) => {
       return title;
     }
 
-    if (isValid(tooltipTitle)) {
-      return tooltipTitle;
+    if (isValid(tooltipProps.title)) {
+      return tooltipProps.title;
     }
 
     return undefined;
-  }, [enableEllipsis, cssEllipsis, title, tooltipTitle, isMergedEllipsis]);
+  }, [enableEllipsis, cssEllipsis, title, tooltipProps.title, isMergedEllipsis]);
 
   // =========================== Render ===========================
   // >>>>>>>>>>> Editing input
@@ -450,9 +487,9 @@ const Base = React.forwardRef((props: InternalBlockProps, ref: any) => {
 
   return (
     <ResizeObserver onResize={onResize} disabled={!mergedEnableEllipsis || cssEllipsis}>
-      {resizeRef => (
+      {(resizeRef: React.RefObject<HTMLElement>) => (
         <EllipsisTooltip
-          title={tooltipTitle}
+          tooltipProps={tooltipProps}
           enabledEllipsis={mergedEnableEllipsis}
           isEllipsis={isMergedEllipsis}
         >
@@ -475,8 +512,8 @@ const Base = React.forwardRef((props: InternalBlockProps, ref: any) => {
             component={component}
             ref={composeRef(resizeRef, typographyRef, ref)}
             direction={direction}
-            onClick={triggerType.includes('text') ? onEditClick : null}
-            aria-label={topAriaLabel}
+            onClick={triggerType.includes('text') ? onEditClick : undefined}
+            aria-label={topAriaLabel?.toString()}
             title={title}
             {...textProps}
           >
@@ -485,6 +522,7 @@ const Base = React.forwardRef((props: InternalBlockProps, ref: any) => {
               text={children}
               rows={rows}
               width={ellipsisWidth}
+              fontSize={ellipsisFontSize}
               onEllipsis={onJsEllipsis}
             >
               {(node, needEllipsis) => {

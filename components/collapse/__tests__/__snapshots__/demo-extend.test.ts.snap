@@ -179,11 +179,9 @@ exports[`renders ./components/collapse/demo/basic.md extend context correctly 1`
         class="ant-collapse-content-box"
       >
         <p>
-          
   A dog is a type of domesticated animal.
   Known for its loyalty and faithfulness,
   it can be found as a welcome guest in many households across the world.
-
         </p>
       </div>
     </div>
@@ -468,11 +466,9 @@ exports[`renders ./components/collapse/demo/collapsible.md extend context correc
             class="ant-collapse-content-box"
           >
             <p>
-              
   A dog is a type of domesticated animal.
   Known for its loyalty and faithfulness,
   it can be found as a welcome guest in many households across the world.
-
             </p>
           </div>
         </div>
@@ -581,11 +577,9 @@ exports[`renders ./components/collapse/demo/custom.md extend context correctly 1
         class="ant-collapse-content-box"
       >
         <p>
-          
   A dog is a type of domesticated animal.
   Known for its loyalty and faithfulness,
   it can be found as a welcome guest in many households across the world.
-
         </p>
       </div>
     </div>
@@ -749,11 +743,9 @@ Array [
           class="ant-collapse-content-box"
         >
           <div>
-            
   A dog is a type of domesticated animal.
   Known for its loyalty and faithfulness,
   it can be found as a welcome guest in many households across the world.
-
           </div>
         </div>
       </div>
@@ -1087,11 +1079,9 @@ exports[`renders ./components/collapse/demo/ghost.md extend context correctly 1`
         class="ant-collapse-content-box"
       >
         <p>
-          
   A dog is a type of domesticated animal.
   Known for its loyalty and faithfulness,
   it can be found as a welcome guest in many households across the world.
-
         </p>
       </div>
     </div>
@@ -1357,11 +1347,9 @@ exports[`renders ./components/collapse/demo/noarrow.md extend context correctly 
         class="ant-collapse-content-box"
       >
         <p>
-          
   A dog is a type of domesticated animal.
   Known for its loyalty and faithfulness,
   it can be found as a welcome guest in many households across the world.
-
         </p>
       </div>
     </div>

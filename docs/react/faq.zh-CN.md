@@ -21,6 +21,10 @@ title: FAQ
 
 注意：对于类 `Select` 组件的 `options`，我们**强烈不建议**使用 `undefined` 和 `null` 作为 `option` 中的 `value`，请使用 `string | number` 作为 `option` 的 `value`。
 
+## 官方文档中没有提供的隐藏 API 我可以使用吗？
+
+不推荐。对内接口不保证兼容性，它很可能在某个版本中因重构而移除。如果你确实需要使用，需自行确保版本升级时隐藏接口仍旧可用，或者锁定版本。
+
 ## 当我点击 `Select Dropdown DatePicker TimePicker Popover Popconfirm` 内的另一个 popup 组件时它会消失，如何解决？
 
 该问题在 `3.11.0` 后已经解决。如果你仍在使用旧版本，你可以通过 `<Select getPopupContainer={trigger => trigger.parentElement}>` 来在 Popover 中渲染组件，或者使用其他的 `getXxxxContainer` 参数。
@@ -44,6 +48,18 @@ title: FAQ
 ## 如何修改 Ant Design 组件的默认样式？
 
 你可以覆盖它们的样式，但是我们不推荐这么做。antd 是一系列 React 组件，但同样是一套设计规范。
+
+## 如何避免升级导致的破坏性变更？
+
+antd 在 minor 和 patch 版本迭代中会避免引入破坏性变更，遵从以下原则会确保不会破坏你的代码：
+
+- 使用出现在官方 Demo 中的写法
+- FAQ 中出现的解法，包含代码片段以及 codesandbox 示例、issue 中当前版本标记 FAQ label 的
+
+而下述变更则需要开发者自行校验：
+
+- 特定场景的错误用法，BUG as Feature（例如 Tabs 下直接包 div 的用法）
+- 可以通过正常用法实现功能需求却魔改的
 
 ## 如何使用 Day.js 替换 Moment.js 来减小打包大小？
 
@@ -109,11 +125,41 @@ antd 内部会对 props 进行浅比较实现性能优化。当状态变更，�
 
 如果你需要一些 antd 没有包含的功能，你可以尝试通过 [HOC](https://gist.github.com/sebmarkbage/ef0bf1f338a7182b6775) 拓展 antd 的组件。 [更多](https://medium.com/@dan_abramov/mixins-are-dead-long-live-higher-order-components-94a0d2f9e750#.eeu8q01s1)
 
+## 如何获取未导出的属性定义？
+
+antd 会透出组件定义，但是随着重构可能导致内部一些定义命名或者属性变化。因而更推荐直接使用 Typescript 原生能力获取：
+
+```tsx
+import { Table } from 'antd';
+
+type Props<T extends (...args: any) => any> = Parameters<T>[0];
+
+type TableProps = Props<typeof Table<{ key: string; name: string; age: number }>>;
+type DataSource = TableProps['dataSource'];
+```
+
 ## 我的组件默认语言是英文的？如何切回中文的。
 
 请尝试使用 [ConfigProvider](/components/config-provider/#components-config-provider-demo-locale) 组件来包裹你的应用。
 
 如果日期组件的国际化仍未生效，请配置 `moment.locale('zh-cn')` 并**检查你本地的 `moment` 版本和 `antd` 依赖的 `moment` 版本是否一致**。
+
+## 为什么时间类组件的国际化 locale 设置不生效？
+
+请检查是否正确设置了 moment 语言包。
+
+```jsx
+import 'moment/locale/zh-cn';
+moment.locale('zh-cn');
+```
+
+如果还有问题，请检查是否有两个版本的 moment 共存？
+
+```jsx
+npm ls moment
+```
+
+一般来说，如果项目中依赖的 moment 版本和 [antd 依赖的 moment 版本](https://github.com/ant-design/ant-design/blob/7dfc80504a36cf8952cd732a1d0c137a16d56fd4/package.json#L125) 无法兼容（semver 无法匹配，比如项目中的 moment 版本写死且较低），则会导致使用两个不同版本的 momenet 实例，这样也会导致国际化失效。
 
 ## 开启了 Content Security Policy (CSP) 如何处理动态样式？
 
@@ -153,6 +199,12 @@ ConfigProvider.config({
 ## 为什么我不应该通过 ref 访问组件内部的 props 和 state？
 
 你通过 ref 获得引用时只应该使用文档提供的方法。直接读取组件内部的 `props` 和 `state` 不是一个好的设计，这会使你的代码与组件版本强耦合。任何重构都可能会使你的代码无法工作，其中重构包括且不仅限于改造成 [Hooks](https://reactjs.org/docs/hooks-intro.html) 版本、移除 / 更名内部 `props` 与 `state`、调整内部 React 节点结构等等。
+
+<div id="why-open"></div>
+
+## 弹层类组件为什么要统一至 `open` 属性？
+
+因为历史原因，弹层类组件展示命名并不统一，出现了 `open` 与 `visible` 都在使用的情况。这使得非 tsx 用户在开发时遭遇的记忆成本。同样导致新增 feature 时选择何种命名的模棱两可。因而我们希望统一该属性命名，你仍然可以使用原本的 `visible` 它仍然会向下兼容，但是从 v5 起我们将从文档中移除该属性。
 
 ## 如何正确的拼写 Ant Design？
 

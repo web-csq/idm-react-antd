@@ -16,6 +16,7 @@ export type DropdownButtonType = 'default' | 'primary' | 'ghost' | 'dashed' | 'l
 export interface DropdownButtonProps extends ButtonGroupProps, DropdownProps {
   type?: DropdownButtonType;
   htmlType?: ButtonHTMLType;
+  danger?: boolean;
   disabled?: boolean;
   loading?: ButtonProps['loading'];
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -27,6 +28,7 @@ export interface DropdownButtonProps extends ButtonGroupProps, DropdownProps {
 }
 
 interface DropdownButtonInterface extends React.FC<DropdownButtonProps> {
+  /** @internal */
   __ANT_BUTTON: boolean;
 }
 
@@ -40,6 +42,7 @@ const DropdownButton: DropdownButtonInterface = props => {
   const {
     prefixCls: customizePrefixCls,
     type = 'default',
+    danger,
     disabled,
     loading,
     onClick,
@@ -50,7 +53,9 @@ const DropdownButton: DropdownButtonInterface = props => {
     trigger,
     align,
     visible,
+    open,
     onVisibleChange,
+    onOpenChange,
     placement,
     getPopupContainer,
     href,
@@ -66,22 +71,24 @@ const DropdownButton: DropdownButtonInterface = props => {
   } = props;
 
   const prefixCls = getPrefixCls('dropdown-button', customizePrefixCls);
-  const dropdownProps = {
+  const dropdownProps: DropdownProps = {
     align,
     overlay,
     disabled,
     trigger: disabled ? [] : trigger,
-    onVisibleChange,
+    onOpenChange: onOpenChange || onVisibleChange,
     getPopupContainer: getPopupContainer || getContextPopupContainer,
     mouseEnterDelay,
     mouseLeaveDelay,
     overlayClassName,
     overlayStyle,
     destroyPopupOnHide,
-  } as DropdownProps;
+  };
 
-  if ('visible' in props) {
-    dropdownProps.visible = visible;
+  if ('open' in props) {
+    dropdownProps.open = open;
+  } else if ('visible' in props) {
+    dropdownProps.open = visible;
   }
 
   if ('placement' in props) {
@@ -93,6 +100,7 @@ const DropdownButton: DropdownButtonInterface = props => {
   const leftButton = (
     <Button
       type={type}
+      danger={danger}
       disabled={disabled}
       loading={loading}
       onClick={onClick}
@@ -104,9 +112,9 @@ const DropdownButton: DropdownButtonInterface = props => {
     </Button>
   );
 
-  const rightButton = <Button type={type} icon={icon} />;
+  const rightButton = <Button type={type} danger={danger} icon={icon} />;
 
-  const [leftButtonToRender, rightButtonToRender] = buttonsRender!([leftButton, rightButton]);
+  const [leftButtonToRender, rightButtonToRender] = buttonsRender([leftButton, rightButton]);
 
   return (
     <ButtonGroup {...restProps} className={classNames(prefixCls, className)}>

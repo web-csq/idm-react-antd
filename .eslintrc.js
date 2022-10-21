@@ -31,7 +31,7 @@ module.exports = {
         '@typescript-eslint/no-unused-vars': [2, { args: 'none' }],
         'no-unused-expressions': 'off',
         '@typescript-eslint/no-unused-expressions': 2,
-        '@typescript-eslint/consistent-type-imports': 2,
+        '@typescript-eslint/consistent-type-imports': [2, { disallowTypeAnnotations: false }],
       },
     },
     {
@@ -148,6 +148,7 @@ module.exports = {
     'jest/no-done-callback': 0,
     'jest/valid-title': 0,
     'jest/no-conditional-expect': 0,
+    'jest/no-standalone-expect': 0,
 
     'unicorn/better-regex': 2,
     'unicorn/prefer-string-trim-start-end': 2,

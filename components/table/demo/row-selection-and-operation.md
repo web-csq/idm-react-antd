@@ -15,7 +15,7 @@ To perform operations and clear selections after selecting some rows, use `rowSe
 
 ```tsx
 import { Button, Table } from 'antd';
-import type { ColumnsType } from 'antd/lib/table';
+import type { ColumnsType } from 'antd/es/table';
 import React, { useState } from 'react';
 
 interface DataType {
@@ -64,7 +64,7 @@ const App: React.FC = () => {
   };
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log('selectedRowKeys changed: ', selectedRowKeys);
+    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
 

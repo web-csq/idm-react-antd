@@ -7,7 +7,7 @@ import { RangePicker as RCRangePicker } from 'rc-picker';
 import type { GenerateConfig } from 'rc-picker/lib/generate/index';
 import * as React from 'react';
 import { forwardRef, useContext, useImperativeHandle } from 'react';
-import type { PickerLocale, RangePickerProps } from '.';
+import type { RangePickerProps } from '.';
 import { Components, getTimeProps } from '.';
 import { ConfigContext } from '../../config-provider';
 import DisabledContext from '../../config-provider/DisabledContext';
@@ -18,6 +18,7 @@ import { getMergedStatus, getStatusClassNames } from '../../_util/statusUtils';
 import enUS from '../locale/en_US';
 import { getRangePlaceholder, transPlacement2DropdownAlign } from '../util';
 import type { CommonPickerMethods, PickerComponentClass } from './interface';
+import warning from '../../_util/warning';
 
 export default function generateRangePicker<DateType>(
   generateConfig: GenerateConfig<DateType>,
@@ -26,7 +27,14 @@ export default function generateRangePicker<DateType>(
 
   const RangePicker = forwardRef<
     InternalRangePickerProps | CommonPickerMethods,
-    RangePickerProps<DateType>
+    RangePickerProps<DateType> & {
+      /**
+       * @deprecated `dropdownClassName` is deprecated which will be removed in next major
+       *   version.Please use `popupClassName` instead.
+       */
+      dropdownClassName: string;
+      popupClassName?: string;
+    }
   >((props, ref) => {
     const {
       prefixCls: customizePrefixCls,
@@ -37,6 +45,8 @@ export default function generateRangePicker<DateType>(
       disabled: customDisabled,
       bordered = true,
       placeholder,
+      popupClassName,
+      dropdownClassName,
       status: customStatus,
       ...restProps
     } = props;
@@ -53,6 +63,12 @@ export default function generateRangePicker<DateType>(
       ...(showTime ? getTimeProps({ format, picker, ...showTime }) : {}),
       ...(picker === 'time' ? getTimeProps({ format, ...props, picker }) : {}),
     };
+
+    warning(
+      !dropdownClassName,
+      'RangePicker',
+      '`dropdownClassName` is deprecated which will be removed in next major version. Please use `popupClassName` instead.',
+    );
 
     // ===================== Size =====================
     const size = React.useContext(SizeContext);
@@ -80,7 +96,7 @@ export default function generateRangePicker<DateType>(
 
     return (
       <LocaleReceiver componentName="DatePicker" defaultLocale={enUS}>
-        {(contextLocale: PickerLocale) => {
+        {contextLocale => {
           const locale = { ...contextLocale, ...props.locale };
 
           return (
@@ -92,6 +108,7 @@ export default function generateRangePicker<DateType>(
               }
               disabled={mergedDisabled}
               ref={innerRef}
+              dropdownClassName={popupClassName || dropdownClassName}
               dropdownAlign={transPlacement2DropdownAlign(direction, placement)}
               placeholder={getRangePlaceholder(picker, locale, placeholder)}
               suffixIcon={suffixNode}

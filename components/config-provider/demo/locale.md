@@ -29,8 +29,8 @@ import {
   TimePicker,
   Transfer,
 } from 'antd';
-import enUS from 'antd/lib/locale/en_US';
-import zhCN from 'antd/lib/locale/zh_CN';
+import enUS from 'antd/es/locale/en_US';
+import zhCN from 'antd/es/locale/zh_CN';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 import React, { useState } from 'react';
@@ -58,14 +58,14 @@ const columns = [
 ];
 
 const Page = () => {
-  const [visible, setVisible] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const showModal = () => {
-    setVisible(true);
+    setOpen(true);
   };
 
   const hideModal = () => {
-    setVisible(false);
+    setOpen(false);
   };
 
   const info = () => {
@@ -115,7 +115,7 @@ const Page = () => {
       <div className="example">
         <Table dataSource={[]} columns={columns} />
       </div>
-      <Modal title="Locale Modal" visible={visible} onCancel={hideModal}>
+      <Modal title="Locale Modal" open={open} onCancel={hideModal}>
         <p>Locale Modal</p>
       </Modal>
     </div>

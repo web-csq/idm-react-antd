@@ -49,8 +49,18 @@ export interface DropdownProps {
   arrow?: boolean | DropdownArrowOptions;
   trigger?: ('click' | 'hover' | 'contextMenu')[];
   overlay: React.ReactElement | OverlayFunc;
+  /**
+   * @deprecated `onVisibleChange` is deprecated which will be removed in next major version. Please
+   *   use `onOpenChange` instead.
+   */
   onVisibleChange?: (visible: boolean) => void;
+  onOpenChange?: (open: boolean) => void;
+  /**
+   * @deprecated `visible` is deprecated which will be removed in next major version. Please use
+   *   `open` instead.
+   */
   visible?: boolean;
+  open?: boolean;
   disabled?: boolean;
   destroyPopupOnHide?: boolean;
   align?: Align;
@@ -79,13 +89,27 @@ const Dropdown: DropdownInterface = props => {
     direction,
   } = React.useContext(ConfigContext);
 
+  // Warning for deprecated usage
+  if (process.env.NODE_ENV !== 'production') {
+    [
+      ['visible', 'open'],
+      ['onVisibleChange', 'onOpenChange'],
+    ].forEach(([deprecatedName, newName]) => {
+      warning(
+        !(deprecatedName in props),
+        'Dropdown',
+        `\`${deprecatedName}\` is deprecated which will be removed in next major version, please use \`${newName}\` instead.`,
+      );
+    });
+  }
+
   const getTransitionName = () => {
     const rootPrefixCls = getPrefixCls();
     const { placement = '', transitionName } = props;
     if (transitionName !== undefined) {
       return transitionName;
     }
-    if (placement.indexOf('top') >= 0) {
+    if (placement.includes('top')) {
       return `${rootPrefixCls}-slide-down`;
     }
     return `${rootPrefixCls}-slide-up`;
@@ -94,7 +118,7 @@ const Dropdown: DropdownInterface = props => {
   const getPlacement = () => {
     const { placement } = props;
     if (!placement) {
-      return direction === 'rtl' ? ('bottomRight' as Placement) : ('bottomLeft' as Placement);
+      return direction === 'rtl' ? 'bottomRight' : 'bottomLeft';
     }
 
     if (placement.includes('Center')) {
@@ -119,7 +143,11 @@ const Dropdown: DropdownInterface = props => {
     getPopupContainer,
     overlayClassName,
     visible,
+    open,
     onVisibleChange,
+    onOpenChange,
+    mouseEnterDelay = 0.15,
+    mouseLeaveDelay = 0.1,
   } = props;
 
   const prefixCls = getPrefixCls('dropdown', customizePrefixCls);
@@ -137,19 +165,20 @@ const Dropdown: DropdownInterface = props => {
   });
 
   const triggerActions = disabled ? [] : trigger;
-  let alignPoint;
-  if (triggerActions && triggerActions.indexOf('contextMenu') !== -1) {
+  let alignPoint: boolean;
+  if (triggerActions && triggerActions.includes('contextMenu')) {
     alignPoint = true;
   }
 
   // =========================== Visible ============================
-  const [mergedVisible, setVisible] = useMergedState(false, {
-    value: visible,
+  const [mergedOpen, setOpen] = useMergedState(false, {
+    value: open !== undefined ? open : visible,
   });
 
-  const onInnerVisibleChange = useEvent((nextVisible: boolean) => {
-    onVisibleChange?.(nextVisible);
-    setVisible(nextVisible);
+  const onInnerOpenChange = useEvent((nextOpen: boolean) => {
+    onVisibleChange?.(nextOpen);
+    onOpenChange?.(nextOpen);
+    setOpen(nextOpen);
   });
 
   // =========================== Overlay ============================
@@ -163,7 +192,7 @@ const Dropdown: DropdownInterface = props => {
   });
 
   const onMenuClick = React.useCallback(() => {
-    setVisible(false);
+    setOpen(false);
   }, []);
 
   const renderOverlay = () => {
@@ -171,9 +200,9 @@ const Dropdown: DropdownInterface = props => {
     // So we need render the element to check and pass back to rc-dropdown.
     const { overlay } = props;
 
-    let overlayNode;
+    let overlayNode: React.ReactNode;
     if (typeof overlay === 'function') {
-      overlayNode = (overlay as OverlayFunc)();
+      overlayNode = overlay();
     } else {
       overlayNode = overlay;
     }
@@ -209,9 +238,11 @@ const Dropdown: DropdownInterface = props => {
   // ============================ Render ============================
   return (
     <RcDropdown
-      alignPoint={alignPoint}
+      alignPoint={alignPoint!}
       {...props}
-      visible={mergedVisible}
+      mouseEnterDelay={mouseEnterDelay}
+      mouseLeaveDelay={mouseLeaveDelay}
+      visible={mergedOpen}
       builtinPlacements={builtinPlacements}
       arrow={!!arrow}
       overlayClassName={overlayClassNameCustomized}
@@ -221,7 +252,7 @@ const Dropdown: DropdownInterface = props => {
       trigger={triggerActions}
       overlay={renderOverlay}
       placement={getPlacement()}
-      onVisibleChange={onInnerVisibleChange}
+      onVisibleChange={onInnerOpenChange}
     >
       {dropdownTrigger}
     </RcDropdown>
@@ -229,10 +260,5 @@ const Dropdown: DropdownInterface = props => {
 };
 
 Dropdown.Button = DropdownButton;
-
-Dropdown.defaultProps = {
-  mouseEnterDelay: 0.15,
-  mouseLeaveDelay: 0.1,
-};
 
 export default Dropdown;

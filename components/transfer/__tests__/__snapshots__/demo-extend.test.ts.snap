@@ -177,7 +177,10 @@ exports[`renders ./components/transfer/demo/advanced.md extend context correctly
       <span
         class="ant-transfer-list-header-selected"
       >
-        0 item
+        0
+        <!-- -->
+        <!-- -->
+        item
       </span>
       <span
         class="ant-transfer-list-header-title"
@@ -550,7 +553,10 @@ exports[`renders ./components/transfer/demo/advanced.md extend context correctly
       <span
         class="ant-transfer-list-header-selected"
       >
-        0 item
+        0
+        <!-- -->
+        <!-- -->
+        item
       </span>
       <span
         class="ant-transfer-list-header-title"
@@ -869,7 +875,10 @@ exports[`renders ./components/transfer/demo/basic.md extend context correctly 1`
       <span
         class="ant-transfer-list-header-selected"
       >
-        11 items
+        11
+        <!-- -->
+        <!-- -->
+        items
       </span>
       <span
         class="ant-transfer-list-header-title"
@@ -1387,7 +1396,10 @@ exports[`renders ./components/transfer/demo/basic.md extend context correctly 1`
       <span
         class="ant-transfer-list-header-selected"
       >
-        9 items
+        9
+        <!-- -->
+        <!-- -->
+        items
       </span>
       <span
         class="ant-transfer-list-header-title"
@@ -1809,7 +1821,10 @@ exports[`renders ./components/transfer/demo/custom-item.md extend context correc
       <span
         class="ant-transfer-list-header-selected"
       >
-        0 item
+        0
+        <!-- -->
+        <!-- -->
+        item
       </span>
       <span
         class="ant-transfer-list-header-title"
@@ -2097,7 +2112,10 @@ exports[`renders ./components/transfer/demo/custom-item.md extend context correc
       <span
         class="ant-transfer-list-header-selected"
       >
-        0 item
+        0
+        <!-- -->
+        <!-- -->
+        item
       </span>
       <span
         class="ant-transfer-list-header-title"
@@ -3063,7 +3081,10 @@ Array [
         <span
           class="ant-transfer-list-header-selected"
         >
-          0 item
+          0
+          <!-- -->
+          <!-- -->
+          item
         </span>
         <span
           class="ant-transfer-list-header-title"
@@ -3390,7 +3411,10 @@ Array [
         <span
           class="ant-transfer-list-header-selected"
         >
-          0 item
+          0
+          <!-- -->
+          <!-- -->
+          item
         </span>
         <span
           class="ant-transfer-list-header-title"
@@ -3649,7 +3673,10 @@ Array [
         <span
           class="ant-transfer-list-header-selected"
         >
-          14 items
+          14
+          <!-- -->
+          <!-- -->
+          items
         </span>
         <span
           class="ant-transfer-list-header-title"
@@ -4154,7 +4181,10 @@ Array [
         <span
           class="ant-transfer-list-header-selected"
         >
-          6 items
+          6
+          <!-- -->
+          <!-- -->
+          items
         </span>
         <span
           class="ant-transfer-list-header-title"
@@ -4588,7 +4618,10 @@ exports[`renders ./components/transfer/demo/search.md extend context correctly 1
       <span
         class="ant-transfer-list-header-selected"
       >
-        0 item
+        0
+        <!-- -->
+        <!-- -->
+        item
       </span>
       <span
         class="ant-transfer-list-header-title"
@@ -4941,7 +4974,10 @@ exports[`renders ./components/transfer/demo/search.md extend context correctly 1
       <span
         class="ant-transfer-list-header-selected"
       >
-        0 item
+        0
+        <!-- -->
+        <!-- -->
+        item
       </span>
       <span
         class="ant-transfer-list-header-title"
@@ -5254,7 +5290,10 @@ exports[`renders ./components/transfer/demo/status.md extend context correctly 1
           <span
             class="ant-transfer-list-header-selected"
           >
-            0 item
+            0
+            <!-- -->
+            <!-- -->
+            item
           </span>
           <span
             class="ant-transfer-list-header-title"
@@ -5541,7 +5580,10 @@ exports[`renders ./components/transfer/demo/status.md extend context correctly 1
           <span
             class="ant-transfer-list-header-selected"
           >
-            0 item
+            0
+            <!-- -->
+            <!-- -->
+            item
           </span>
           <span
             class="ant-transfer-list-header-title"
@@ -5782,7 +5824,10 @@ exports[`renders ./components/transfer/demo/status.md extend context correctly 1
           <span
             class="ant-transfer-list-header-selected"
           >
-            0 item
+            0
+            <!-- -->
+            <!-- -->
+            item
           </span>
           <span
             class="ant-transfer-list-header-title"
@@ -6135,7 +6180,10 @@ exports[`renders ./components/transfer/demo/status.md extend context correctly 1
           <span
             class="ant-transfer-list-header-selected"
           >
-            0 item
+            0
+            <!-- -->
+            <!-- -->
+            item
           </span>
           <span
             class="ant-transfer-list-header-title"
@@ -6444,7 +6492,10 @@ Array [
         <span
           class="ant-transfer-list-header-selected"
         >
-          14 items
+          14
+          <!-- -->
+          <!-- -->
+          items
         </span>
         <span
           class="ant-transfer-list-header-title"
@@ -7290,7 +7341,10 @@ Array [
         <span
           class="ant-transfer-list-header-selected"
         >
-          6 items
+          6
+          <!-- -->
+          <!-- -->
+          items
         </span>
         <span
           class="ant-transfer-list-header-title"
@@ -7680,7 +7734,10 @@ exports[`renders ./components/transfer/demo/tree-transfer.md extend context corr
       <span
         class="ant-transfer-list-header-selected"
       >
-        5 items
+        5
+        <!-- -->
+        <!-- -->
+        items
       </span>
       <span
         class="ant-transfer-list-header-title"
@@ -7978,7 +8035,10 @@ exports[`renders ./components/transfer/demo/tree-transfer.md extend context corr
       <span
         class="ant-transfer-list-header-selected"
       >
-        0 item
+        0
+        <!-- -->
+        <!-- -->
+        item
       </span>
       <span
         class="ant-transfer-list-header-title"

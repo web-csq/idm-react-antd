@@ -4448,7 +4448,7 @@ Array [
       class="ant-switch-inner"
     />
   </button>,
-  " Change Mode",
+   Change Mode,
   <div
     class="ant-divider ant-divider-vertical"
     role="separator"
@@ -4466,7 +4466,7 @@ Array [
       class="ant-switch-inner"
     />
   </button>,
-  " Change Style",
+   Change Style,
   <br />,
   <br />,
   <ul

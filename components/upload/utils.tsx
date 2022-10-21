@@ -58,7 +58,7 @@ export const isImageUrl = (file: UploadFile): boolean => {
   const extension = extname(url);
   if (
     /^data:image\//.test(url) ||
-    /(webp|svg|png|gif|jpg|jpeg|jfif|bmp|dpg|ico)$/i.test(extension)
+    /(webp|svg|png|gif|jpg|jpeg|jfif|bmp|dpg|ico|heic|heif)$/i.test(extension)
   ) {
     return true;
   }
@@ -110,6 +110,15 @@ export function previewImage(file: File | Blob): Promise<string> {
 
       resolve(dataURL);
     };
-    img.src = window.URL.createObjectURL(file);
+    img.crossOrigin = 'anonymous';
+    if (file.type.startsWith('image/svg+xml')) {
+      const reader = new FileReader();
+      reader.addEventListener('load', () => {
+        if (reader.result) img.src = reader.result as string;
+      });
+      reader.readAsDataURL(file);
+    } else {
+      img.src = window.URL.createObjectURL(file);
+    }
   });
 }

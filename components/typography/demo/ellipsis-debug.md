@@ -26,6 +26,13 @@ const App: React.FC = () => {
   const [copyable, setCopyable] = useState(false);
   const [editable, setEditable] = useState(false);
   const [expandable, setExpandable] = useState(false);
+  const [display, setDisplay] = useState('none');
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      setDisplay('block');
+    }, 100);
+  }, []);
 
   return (
     <>
@@ -53,6 +60,30 @@ const App: React.FC = () => {
         </Paragraph>
       )}
 
+      <Text style={{ maxWidth: 400, fontSize: 24 }} copyable ellipsis>
+        In the process of internal desktop applications development, many different design specs and
+        implementations would be involved, which might cause designers and developers difficulties
+        and duplication and reduce the efficiency of development.
+      </Text>
+
+      <br />
+
+      <Text style={{ maxWidth: 400, fontSize: 12 }} copyable ellipsis>
+        In the process of internal desktop applications development, many different design specs and
+        implementations would be involved, which might cause designers and developers difficulties
+        and duplication and reduce the efficiency of development.
+      </Text>
+
+      <br />
+
+      <Text style={{ width: 400, fontSize: 24 }} copyable ellipsis>
+        In the process of internal desktop applications development, many different design specs and
+        implementations would be involved, which might cause designers and developers difficulties
+        and duplication and reduce the efficiency of development.
+      </Text>
+
+      <br />
+
       <Text style={{ width: 100 }} ellipsis copyable>
         Ant Design is a design language for background applications, is refined by Ant UED Team.
       </Text>
@@ -60,6 +91,12 @@ const App: React.FC = () => {
       <p>
         [Before]<Text ellipsis>not ellipsis</Text>[After]
       </p>
+
+      <div style={{ display }}>
+        <Text style={{ width: 100 }} ellipsis={{ tooltip: 'I am ellipsis now!' }}>
+          默认display none 样式的超长文字， 悬停tooltip失效了
+        </Text>
+      </div>
     </>
   );
 };

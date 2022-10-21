@@ -3,19 +3,13 @@ import type { UploadProps as RcUploadProps } from 'rc-upload';
 import RcUpload from 'rc-upload';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import * as React from 'react';
+import { flushSync } from 'react-dom';
 import { ConfigContext } from '../config-provider';
+import DisabledContext from '../config-provider/DisabledContext';
 import LocaleReceiver from '../locale-provider/LocaleReceiver';
 import defaultLocale from '../locale/default';
 import warning from '../_util/warning';
-import type {
-  RcFile,
-  ShowUploadListInterface,
-  UploadChangeParam,
-  UploadFile,
-  UploadListType,
-  UploadLocale,
-  UploadType,
-} from './interface';
+import type { RcFile, ShowUploadListInterface, UploadChangeParam, UploadFile } from './interface';
 import { UploadProps } from './interface';
 import UploadList from './UploadList';
 import { file2Obj, getFileItem, removeFileItem, updateFileList } from './utils';
@@ -29,26 +23,35 @@ const InternalUpload: React.ForwardRefRenderFunction<unknown, UploadProps> = (pr
     fileList,
     defaultFileList,
     onRemove,
-    showUploadList,
-    listType,
+    showUploadList = true,
+    listType = 'text',
     onPreview,
     onDownload,
     onChange,
     onDrop,
     previewFile,
-    disabled,
+    disabled: customDisabled = false,
     locale: propLocale,
     iconRender,
     isImageUrl,
     progress,
     prefixCls: customizePrefixCls,
     className,
-    type,
+    type = 'select',
     children,
     style,
     itemRender,
     maxCount,
+    data = {},
+    multiple = false,
+    action = '',
+    accept = '',
+    supportServerRender = true,
   } = props;
+
+  // ===================== Disabled =====================
+  const disabled = React.useContext(DisabledContext);
+  const mergedDisabled = customDisabled || disabled;
 
   const [mergedFileList, setMergedFileList] = useMergedState(defaultFileList || [], {
     value: fileList,
@@ -96,7 +99,11 @@ const InternalUpload: React.ForwardRefRenderFunction<unknown, UploadProps> = (pr
       cloneList = cloneList.slice(0, maxCount);
     }
 
-    setMergedFileList(cloneList);
+    // Prevent React18 auto batch since input[upload] trigger process at same time
+    // which makes fileList closure problem
+    flushSync(() => {
+      setMergedFileList(cloneList);
+    });
 
     const changeInfo: UploadChangeParam<UploadFile> = {
       file: file as UploadFile,
@@ -303,11 +310,17 @@ const InternalUpload: React.ForwardRefRenderFunction<unknown, UploadProps> = (pr
     onError,
     onProgress,
     onSuccess,
-    ...(props as RcUploadProps),
+    ...props,
+    data,
+    multiple,
+    action,
+    accept,
+    supportServerRender,
     prefixCls,
+    disabled: mergedDisabled,
     beforeUpload: mergedBeforeUpload,
     onChange: undefined,
-  };
+  } as RcUploadProps;
 
   delete rcUploadProps.className;
   delete rcUploadProps.style;
@@ -316,14 +329,14 @@ const InternalUpload: React.ForwardRefRenderFunction<unknown, UploadProps> = (pr
   // !children: https://github.com/ant-design/ant-design/issues/14298
   // disabled: https://github.com/ant-design/ant-design/issues/16478
   //           https://github.com/ant-design/ant-design/issues/24197
-  if (!children || disabled) {
+  if (!children || mergedDisabled) {
     delete rcUploadProps.id;
   }
 
   const renderUploadList = (button?: React.ReactNode, buttonVisible?: boolean) =>
     showUploadList ? (
       <LocaleReceiver componentName="Upload" defaultLocale={defaultLocale.Upload}>
-        {(locale: UploadLocale) => {
+        {contextLocale => {
           const {
             showRemoveIcon,
             showPreviewIcon,
@@ -342,14 +355,14 @@ const InternalUpload: React.ForwardRefRenderFunction<unknown, UploadProps> = (pr
               onPreview={onPreview}
               onDownload={onDownload}
               onRemove={handleRemove}
-              showRemoveIcon={!disabled && showRemoveIcon}
+              showRemoveIcon={!mergedDisabled && showRemoveIcon}
               showPreviewIcon={showPreviewIcon}
               showDownloadIcon={showDownloadIcon}
               removeIcon={removeIcon}
               previewIcon={previewIcon}
               downloadIcon={downloadIcon}
               iconRender={iconRender}
-              locale={{ ...locale, ...propLocale }}
+              locale={{ ...contextLocale, ...propLocale }}
               isImageUrl={isImageUrl}
               progress={progress}
               appendAction={button}
@@ -370,7 +383,7 @@ const InternalUpload: React.ForwardRefRenderFunction<unknown, UploadProps> = (pr
         [`${prefixCls}-drag`]: true,
         [`${prefixCls}-drag-uploading`]: mergedFileList.some(file => file.status === 'uploading'),
         [`${prefixCls}-drag-hover`]: dragState === 'dragover',
-        [`${prefixCls}-disabled`]: disabled,
+        [`${prefixCls}-disabled`]: mergedDisabled,
         [`${prefixCls}-rtl`]: direction === 'rtl',
       },
       className,
@@ -396,7 +409,7 @@ const InternalUpload: React.ForwardRefRenderFunction<unknown, UploadProps> = (pr
   const uploadButtonCls = classNames(prefixCls, {
     [`${prefixCls}-select`]: true,
     [`${prefixCls}-select-${listType}`]: true,
-    [`${prefixCls}-disabled`]: disabled,
+    [`${prefixCls}-disabled`]: mergedDisabled,
     [`${prefixCls}-rtl`]: direction === 'rtl',
   });
 
@@ -425,21 +438,9 @@ const InternalUpload: React.ForwardRefRenderFunction<unknown, UploadProps> = (pr
 };
 
 const Upload = React.forwardRef<unknown, UploadProps>(InternalUpload);
+
 if (process.env.NODE_ENV !== 'production') {
   Upload.displayName = 'Upload';
 }
-
-Upload.defaultProps = {
-  type: 'select' as UploadType,
-  multiple: false,
-  action: '',
-  data: {},
-  accept: '',
-  showUploadList: true,
-  listType: 'text' as UploadListType, // or picture
-  className: '',
-  disabled: false,
-  supportServerRender: true,
-};
 
 export default Upload;

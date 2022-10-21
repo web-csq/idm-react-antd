@@ -29,12 +29,12 @@ export type ModalStaticFunctions = Record<NonNullable<ModalFuncProps['type']>, M
 export default function confirm(config: ModalFuncProps) {
   const container = document.createDocumentFragment();
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  let currentConfig = { ...config, close, visible: true } as any;
+  let currentConfig = { ...config, close, open: true } as any;
 
   function destroy(...args: any[]) {
     const triggerCancel = args.some(param => param && param.triggerCancel);
     if (config.onCancel && triggerCancel) {
-      config.onCancel(...args);
+      config.onCancel(() => {}, ...args.slice(1));
     }
     for (let i = 0; i < destroyFns.length; i++) {
       const fn = destroyFns[i];
@@ -79,7 +79,7 @@ export default function confirm(config: ModalFuncProps) {
   function close(...args: any[]) {
     currentConfig = {
       ...currentConfig,
-      visible: false,
+      open: false,
       afterClose: () => {
         if (typeof config.afterClose === 'function') {
           config.afterClose();
@@ -88,6 +88,12 @@ export default function confirm(config: ModalFuncProps) {
         destroy.apply(this, args);
       },
     };
+
+    // Legacy support
+    if (currentConfig.visible) {
+      delete currentConfig.visible;
+    }
+
     render(currentConfig);
   }
 

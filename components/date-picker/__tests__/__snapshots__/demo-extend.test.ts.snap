@@ -1694,7 +1694,11 @@ exports[`renders ./components/date-picker/demo/basic.md extend context correctly
                     class="ant-picker-decade-btn"
                     type="button"
                   >
-                    2010-2019
+                    2010
+                    <!-- -->
+                    -
+                    <!-- -->
+                    2019
                   </button>
                 </div>
                 <button
@@ -3401,7 +3405,11 @@ exports[`renders ./components/date-picker/demo/bordered.md extend context correc
                     class="ant-picker-decade-btn"
                     type="button"
                   >
-                    2010-2019
+                    2010
+                    <!-- -->
+                    -
+                    <!-- -->
+                    2019
                   </button>
                 </div>
                 <button
@@ -6615,7 +6623,11 @@ exports[`renders ./components/date-picker/demo/bordered.md extend context correc
                         class="ant-picker-decade-btn"
                         type="button"
                       >
-                        2010-2019
+                        2010
+                        <!-- -->
+                        -
+                        <!-- -->
+                        2019
                       </button>
                     </div>
                     <button
@@ -6796,7 +6808,11 @@ exports[`renders ./components/date-picker/demo/bordered.md extend context correc
                         class="ant-picker-decade-btn"
                         type="button"
                       >
-                        2020-2029
+                        2020
+                        <!-- -->
+                        -
+                        <!-- -->
+                        2029
                       </button>
                     </div>
                     <button
@@ -12583,7 +12599,6 @@ exports[`renders ./components/date-picker/demo/disabled-date.md extend context c
                   <div
                     class="ant-picker-header-view"
                   >
-                     
                   </div>
                 </div>
                 <div
@@ -16004,7 +16019,6 @@ exports[`renders ./components/date-picker/demo/disabled-date.md extend context c
                       <div
                         class="ant-picker-header-view"
                       >
-                         
                       </div>
                     </div>
                     <div
@@ -18090,7 +18104,6 @@ exports[`renders ./components/date-picker/demo/extra-footer.md extend context co
                   <div
                     class="ant-picker-header-view"
                   >
-                     
                   </div>
                 </div>
                 <div
@@ -21292,7 +21305,6 @@ exports[`renders ./components/date-picker/demo/extra-footer.md extend context co
                       <div
                         class="ant-picker-header-view"
                       >
-                         
                       </div>
                     </div>
                     <div
@@ -26952,7 +26964,6 @@ exports[`renders ./components/date-picker/demo/mode.md extend context correctly 
                 <div
                   class="ant-picker-header-view"
                 >
-                   
                 </div>
               </div>
               <div
@@ -32321,7 +32332,6 @@ exports[`renders ./components/date-picker/demo/presetted-ranges.md extend contex
                       <div
                         class="ant-picker-header-view"
                       >
-                         
                       </div>
                     </div>
                     <div
@@ -35527,7 +35537,6 @@ exports[`renders ./components/date-picker/demo/range-picker.md extend context co
                       <div
                         class="ant-picker-header-view"
                       >
-                         
                       </div>
                     </div>
                     <div
@@ -39048,7 +39057,11 @@ exports[`renders ./components/date-picker/demo/range-picker.md extend context co
                         class="ant-picker-decade-btn"
                         type="button"
                       >
-                        2010-2019
+                        2010
+                        <!-- -->
+                        -
+                        <!-- -->
+                        2019
                       </button>
                     </div>
                     <button
@@ -39229,7 +39242,11 @@ exports[`renders ./components/date-picker/demo/range-picker.md extend context co
                         class="ant-picker-decade-btn"
                         type="button"
                       >
-                        2020-2029
+                        2020
+                        <!-- -->
+                        -
+                        <!-- -->
+                        2029
                       </button>
                     </div>
                     <button
@@ -43896,7 +43913,6 @@ exports[`renders ./components/date-picker/demo/start-end.md extend context corre
                   <div
                     class="ant-picker-header-view"
                   >
-                     
                   </div>
                 </div>
                 <div
@@ -45846,7 +45862,6 @@ exports[`renders ./components/date-picker/demo/start-end.md extend context corre
                   <div
                     class="ant-picker-header-view"
                   >
-                     
                   </div>
                 </div>
                 <div
@@ -58241,7 +58256,6 @@ exports[`renders ./components/date-picker/demo/time.md extend context correctly 
                   <div
                     class="ant-picker-header-view"
                   >
-                     
                   </div>
                 </div>
                 <div
@@ -60245,7 +60259,6 @@ exports[`renders ./components/date-picker/demo/time.md extend context correctly 
                       <div
                         class="ant-picker-header-view"
                       >
-                         
                       </div>
                     </div>
                     <div

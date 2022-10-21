@@ -36,7 +36,8 @@ class Demo extends React.Component {
   state = {
     codeExpand: false,
     copied: false,
-    copyTooltipVisible: false,
+    copyTooltipOpen: false,
+    codeType: 'tsx',
   };
 
   componentDidMount() {
@@ -47,26 +48,29 @@ class Demo extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    const { codeExpand, copied, copyTooltipVisible } = this.state;
-    const { expand, theme, showRiddleButton, react18 } = this.props;
+    const { codeExpand, copied, copyTooltipOpen, codeType } = this.state;
+    const { expand, theme, showRiddleButton } = this.props;
     return (
       (codeExpand || expand) !== (nextState.codeExpand || nextProps.expand) ||
       copied !== nextState.copied ||
-      copyTooltipVisible !== nextState.copyTooltipVisible ||
+      copyTooltipOpen !== nextState.copyTooltipOpen ||
+      codeType !== nextState.copyTooltipOpen ||
       nextProps.theme !== theme ||
-      nextProps.showRiddleButton !== showRiddleButton ||
-      nextProps.react18 !== react18
+      nextProps.showRiddleButton !== showRiddleButton
     );
   }
 
   getSourceCode() {
     const { highlightedCodes } = this.props;
+    const { codeType } = this.state;
     if (typeof document !== 'undefined') {
       const div = document.createElement('div');
-      div.innerHTML = highlightedCodes.jsx;
-      return div.textContent;
+      const divJSX = document.createElement('div');
+      div.innerHTML = highlightedCodes[codeType] || highlightedCodes.jsx;
+      divJSX.innerHTML = highlightedCodes.jsx;
+      return [divJSX.textContent, div.textContent];
     }
-    return '';
+    return ['', ''];
   }
 
   handleCodeExpand = demo => {
@@ -90,16 +94,16 @@ class Demo extends React.Component {
     });
   };
 
-  onCopyTooltipVisibleChange = visible => {
-    if (visible) {
+  onCopyTooltipOpenChange = open => {
+    if (open) {
       this.setState({
-        copyTooltipVisible: visible,
+        copyTooltipOpen: open,
         copied: false,
       });
       return;
     }
     this.setState({
-      copyTooltipVisible: visible,
+      copyTooltipOpen: open,
     });
   };
 
@@ -137,9 +141,8 @@ class Demo extends React.Component {
       intl: { locale },
       theme,
       showRiddleButton,
-      react18,
     } = props;
-    const { copied, copyTooltipVisible } = state;
+    const { copied, copyTooltipOpen, codeType } = state;
     if (!this.liveDemo) {
       this.liveDemo = meta.iframe ? (
         <BrowserFrame>
@@ -186,7 +189,18 @@ class Demo extends React.Component {
   </body>
 </html>`;
 
-    const sourceCode = this.getSourceCode();
+    const tsconfig = `{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "target": "esnext",
+    "module": "esnext",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+  }
+}`;
+
+    const [sourceCode, sourceCodeTyped] = this.getSourceCode();
+    const suffix = codeType === 'tsx' ? 'tsx' : 'js';
 
     const dependencies = sourceCode.split('\n').reduce(
       (acc, line) => {
@@ -206,37 +220,39 @@ class Demo extends React.Component {
     );
 
     dependencies['@ant-design/icons'] = 'latest';
-    dependencies.react = react18 ? '^18.0.0' : '^17.0.0';
-    dependencies['react-dom'] = react18 ? '^18.0.0' : '^17.0.0';
+    if (suffix === 'tsx') {
+      dependencies['@types/react'] = '^18.0.0';
+      dependencies['@types/react-dom'] = '^18.0.0';
+    }
+    dependencies.react = '^18.0.0';
+    dependencies['react-dom'] = '^18.0.0';
 
     const codepenPrefillConfig = {
       title: `${localizedTitle} - antd@${dependencies.antd}`,
       html,
-      js: `${react18 ? 'const { createRoot } = ReactDOM;\n' : ''}${sourceCode
+      js: `${'const { createRoot } = ReactDOM;\n'}${sourceCode
         .replace(/import\s+(?:React,\s+)?{(\s+[^}]*\s+)}\s+from\s+'react'/, `const { $1 } = React;`)
         .replace(/import\s+{(\s+[^}]*\s+)}\s+from\s+'antd';/, 'const { $1 } = antd;')
         .replace(/import\s+{(\s+[^}]*\s+)}\s+from\s+'@ant-design\/icons';/, 'const { $1 } = icons;')
         .replace("import moment from 'moment';", '')
+        .replace("import React from 'react';", '')
         .replace(/import\s+{\s+(.*)\s+}\s+from\s+'react-router';/, 'const { $1 } = ReactRouter;')
         .replace(
           /import\s+{\s+(.*)\s+}\s+from\s+'react-router-dom';/,
           'const { $1 } = ReactRouterDOM;',
         )
         .replace(/([A-Za-z]*)\s+as\s+([A-Za-z]*)/, '$1:$2')
-        .replace(/export default/, 'const ComponentDemo =')}\n\n${
-        react18
-          ? 'createRoot(mountNode).render(<ComponentDemo />)'
-          : 'ReactDOM.render(<ComponentDemo />, mountNode)'
-      };\n`,
+        .replace(
+          /export default/,
+          'const ComponentDemo =',
+        )}\n\ncreateRoot(mountNode).render(<ComponentDemo />);\n`,
       css: prefillStyle,
       editors: '001',
       // eslint-disable-next-line no-undef
       css_external: `https://unpkg.com/antd@${antdReproduceVersion}/dist/antd.css`,
       js_external: [
-        react18 ? 'react@18/umd/react.development.js' : 'react@16.x/umd/react.development.js',
-        react18
-          ? 'react-dom@18/umd/react-dom.development.js'
-          : 'react-dom@16.x/umd/react-dom.development.js',
+        'react@18/umd/react.development.js',
+        'react-dom@18/umd/react-dom.development.js',
         'moment/min/moment-with-locales.js',
         // eslint-disable-next-line no-undef
         `antd@${antdReproduceVersion}/dist/antd-with-locales.js`,
@@ -252,14 +268,11 @@ class Demo extends React.Component {
     const riddlePrefillConfig = {
       title: `${localizedTitle} - antd@${dependencies.antd}`,
       js: `${
-        react18
-          ? `import React from 'react';\nimport { createRoot } from 'react-dom/client';\n`
-          : ''
-      }${sourceCode.replace(/export default/, 'const ComponentDemo =')}\n\n${
-        react18
-          ? 'createRoot(mountNode).render(<ComponentDemo />)'
-          : 'ReactDOM.render(<ComponentDemo />, mountNode)'
-      };\n`,
+        /import React(\D*)from 'react';/.test(sourceCode) ? '' : `import React from 'react';\n`
+      }import { createRoot } from 'react-dom/client';\n${sourceCode.replace(
+        /export default/,
+        'const ComponentDemo =',
+      )}\n\ncreateRoot(mountNode).render(<ComponentDemo />);\n`,
       css: prefillStyle,
       json: JSON.stringify(
         {
@@ -272,7 +285,7 @@ class Demo extends React.Component {
     };
 
     // Reorder source code
-    let parsedSourceCode = sourceCode;
+    let parsedSourceCode = suffix === 'tsx' ? sourceCodeTyped : sourceCode;
     let importReactContent = "import React from 'react';";
 
     const importReactReg = /import React(\D*)from 'react';/;
@@ -294,20 +307,12 @@ ${parsedSourceCode}
       .replace('</style>', '')
       .replace('<style>', '');
 
-    const indexJsContent = react18
-      ? `
+    const indexJsContent = `
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import Demo from './demo';
 
 createRoot(document.getElementById('container')).render(<Demo />);
-`
-      : `
-import React from 'react';
-import ReactDOM from 'react-dom';
-import Demo from './demo';
-
-ReactDOM.render(<Demo />, document.getElementById('container'));
 `;
 
     const codesandboxPackage = {
@@ -315,8 +320,8 @@ ReactDOM.render(<Demo />, document.getElementById('container'));
       main: 'index.js',
       dependencies: {
         ...dependencies,
-        react: react18 ? '^18.0.0' : '^16.14.0',
-        'react-dom': react18 ? '^18.0.0' : '^16.14.0',
+        react: '^18.0.0',
+        'react-dom': '^18.0.0',
         'react-scripts': '^4.0.0',
       },
       devDependencies: {
@@ -334,8 +339,8 @@ ReactDOM.render(<Demo />, document.getElementById('container'));
       files: {
         'package.json': { content: codesandboxPackage },
         'index.css': { content: indexCssContent },
-        'index.js': { content: indexJsContent },
-        'demo.js': { content: demoJsContent },
+        [`index.${suffix}`]: { content: indexJsContent },
+        [`demo.${suffix}`]: { content: demoJsContent },
         'index.html': {
           content: html,
         },
@@ -347,11 +352,14 @@ ReactDOM.render(<Demo />, document.getElementById('container'));
       dependencies,
       files: {
         'index.css': indexCssContent,
-        'index.js': indexJsContent,
-        'demo.js': demoJsContent,
+        [`index.${suffix}`]: indexJsContent,
+        [`demo.${suffix}`]: demoJsContent,
         'index.html': html,
       },
     };
+    if (suffix === 'tsx') {
+      stackblitzPrefillConfig.files['tsconfig.json'] = tsconfig;
+    }
 
     let codeBox = (
       <section className={codeBoxClass} id={meta.id}>
@@ -437,24 +445,23 @@ ReactDOM.render(<Demo />, document.getElementById('container'));
                 className="code-box-code-action"
                 onClick={() => {
                   this.track({ type: 'stackblitz', demo: meta.id });
-                  stackblitzSdk.openProject(stackblitzPrefillConfig);
+                  stackblitzSdk.openProject(stackblitzPrefillConfig, {
+                    openFile: [`demo.${suffix}`],
+                  });
                 }}
               >
                 <ThunderboltOutlined className="code-box-stackblitz" />
               </span>
             </Tooltip>
-            <CopyToClipboard text={sourceCode} onCopy={() => this.handleCodeCopied(meta.id)}>
+            <CopyToClipboard text={sourceCodeTyped} onCopy={() => this.handleCodeCopied(meta.id)}>
               <Tooltip
-                visible={copyTooltipVisible}
-                onVisibleChange={this.onCopyTooltipVisibleChange}
+                open={copyTooltipOpen}
+                onOpenChange={this.onCopyTooltipOpenChange}
                 title={<FormattedMessage id={`app.demo.${copied ? 'copied' : 'copy'}`} />}
               >
-                {React.createElement(
-                  copied && copyTooltipVisible ? CheckOutlined : SnippetsOutlined,
-                  {
-                    className: 'code-box-code-copy code-box-code-action',
-                  },
-                )}
+                {React.createElement(copied && copyTooltipOpen ? CheckOutlined : SnippetsOutlined, {
+                  className: 'code-box-code-copy code-box-code-action',
+                })}
               </Tooltip>
             </CopyToClipboard>
             <Tooltip
@@ -486,7 +493,11 @@ ReactDOM.render(<Demo />, document.getElementById('container'));
           </div>
         </section>
         <section className={highlightClass} key="code">
-          <CodePreview toReactComponent={props.utils.toReactComponent} codes={highlightedCodes} />
+          <CodePreview
+            toReactComponent={props.utils.toReactComponent}
+            codes={highlightedCodes}
+            onCodeTypeChange={type => this.setState({ codeType: type })}
+          />
           {highlightedStyle ? (
             <div key="style" className="highlight">
               <pre>
@@ -499,7 +510,11 @@ ReactDOM.render(<Demo />, document.getElementById('container'));
     );
 
     if (meta.version) {
-      codeBox = <Badge.Ribbon text={meta.version}>{codeBox}</Badge.Ribbon>;
+      codeBox = (
+        <Badge.Ribbon text={meta.version} color={meta.version.includes('<') ? 'red' : null}>
+          {codeBox}
+        </Badge.Ribbon>
+      );
     }
 
     return codeBox;

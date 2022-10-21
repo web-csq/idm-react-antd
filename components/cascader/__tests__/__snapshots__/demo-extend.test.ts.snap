@@ -490,13 +490,19 @@ exports[`renders ./components/cascader/demo/custom-render.md extend context corr
       class="ant-select-selection-item"
     >
       <span>
-        Zhejiang / 
+        Zhejiang
+        <!-- -->
+         / 
       </span>
       <span>
-        Hangzhou / 
+        Hangzhou
+        <!-- -->
+         / 
       </span>
       <span>
-        West Lake (
+        West Lake
+        <!-- -->
+         (
         <a>
           752100
         </a>
@@ -651,7 +657,8 @@ exports[`renders ./components/cascader/demo/custom-render.md extend context corr
 
 exports[`renders ./components/cascader/demo/custom-trigger.md extend context correctly 1`] = `
 <span>
-  Unselect 
+  Unselect
+  <!-- -->
   <a
     href="#"
   >
@@ -1558,7 +1565,6 @@ exports[`renders ./components/cascader/demo/multiple.md extend context correctly
             aria-hidden="true"
             class="ant-select-selection-search-mirror"
           >
-             
           </span>
         </div>
       </div>
@@ -2110,7 +2116,6 @@ Array [
               aria-hidden="true"
               class="ant-select-selection-search-mirror"
             >
-               
             </span>
           </div>
         </div>
@@ -2301,7 +2306,6 @@ Array [
               aria-hidden="true"
               class="ant-select-selection-search-mirror"
             >
-               
             </span>
           </div>
         </div>
@@ -3066,7 +3070,6 @@ exports[`renders ./components/cascader/demo/status.md extend context correctly 1
                 aria-hidden="true"
                 class="ant-select-selection-search-mirror"
               >
-                 
               </span>
             </div>
           </div>

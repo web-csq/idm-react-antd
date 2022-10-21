@@ -1,5 +1,4 @@
 import { SearchOutlined } from '@ant-design/icons';
-import { mount } from 'enzyme';
 import { resetWarned } from 'rc-util/lib/warning';
 import React, { Component } from 'react';
 import { act } from 'react-dom/test-utils';
@@ -8,7 +7,6 @@ import mountTest from '../../../tests/shared/mountTest';
 import rtlTest from '../../../tests/shared/rtlTest';
 import { fireEvent, render, sleep } from '../../../tests/utils';
 import ConfigProvider from '../../config-provider';
-import type { SizeType } from '../../config-provider/SizeContext';
 
 describe('Button', () => {
   mountTest(Button);
@@ -39,7 +37,8 @@ describe('Button', () => {
   it('warns if size is wrong', () => {
     resetWarned();
     const mockWarn = jest.spyOn(console, 'error').mockImplementation(() => {});
-    const size = 'who am I' as any as SizeType;
+    const size = 'who am I';
+    // @ts-expect-error: Type '"who am I"' is not assignable to type 'SizeType'.ts(2322)
     render(<Button.Group size={size} />);
     expect(mockWarn).toHaveBeenCalledWith('Warning: [antd: Button.Group] Invalid prop `size`.');
 
@@ -130,8 +129,7 @@ describe('Button', () => {
   });
 
   it('have static property for type detecting', () => {
-    const wrapper = mount(<Button>Button Text</Button>);
-    expect((wrapper.find(Button).type() as any).__ANT_BUTTON).toBe(true);
+    expect(Button.__ANT_BUTTON).toBe(true);
   });
 
   it('should change loading state instantly by default', () => {
@@ -244,7 +242,7 @@ describe('Button', () => {
   });
 
   it('should support to change loading', async () => {
-    const { rerender, container, unmount } = render(<Button>Button</Button>);
+    const { container, rerender, unmount } = render(<Button>Button</Button>);
     rerender(<Button loading />);
     expect(container.querySelectorAll('.ant-btn-loading').length).toBe(1);
     rerender(<Button loading={false} />);
@@ -256,9 +254,7 @@ describe('Button', () => {
     rerender(<Button loading={false} />);
     await sleep(50);
     expect(container.querySelectorAll('.ant-btn-loading').length).toBe(0);
-    expect(() => {
-      unmount();
-    }).not.toThrow();
+    expect(unmount).not.toThrow();
   });
 
   it('should warning when pass a string as icon props', () => {

@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import RcTooltip from 'rc-tooltip';
 import type { placements as Placements } from 'rc-tooltip/lib/placements';
 import type { TooltipProps as RcTooltipProps } from 'rc-tooltip/lib/Tooltip';
+import type { AlignType } from 'rc-trigger/lib/interface';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import * as React from 'react';
 import { ConfigContext } from '../config-provider';
@@ -9,8 +10,9 @@ import type { PresetColorType } from '../_util/colors';
 import { PresetColorTypes } from '../_util/colors';
 import { getTransitionName } from '../_util/motion';
 import getPlacements, { AdjustOverflow, PlacementsConfig } from '../_util/placements';
-import { cloneElement, isValidElement } from '../_util/reactNode';
+import { cloneElement, isValidElement, isFragment } from '../_util/reactNode';
 import type { LiteralUnion } from '../_util/type';
+import warning from '../_util/warning';
 
 export { AdjustOverflow, PlacementsConfig };
 
@@ -39,8 +41,41 @@ export interface TooltipAlignConfig {
   useCssBottom?: boolean;
   useCssTransform?: boolean;
 }
+// remove this after RcTooltip switch visible to open.
+interface LegacyTooltipProps
+  extends Partial<
+    Omit<
+      RcTooltipProps,
+      'children' | 'visible' | 'defaultVisible' | 'onVisibleChange' | 'afterVisibleChange'
+    >
+  > {
+  /**
+   * @deprecated `visible` is deprecated which will be removed in next major version. Please use
+   *   `open` instead.
+   */
+  visible?: RcTooltipProps['visible'];
+  open?: RcTooltipProps['visible'];
+  /**
+   * @deprecated `defaultVisible` is deprecated which will be removed in next major version. Please
+   *   use `defaultOpen` instead.
+   */
+  defaultVisible?: RcTooltipProps['defaultVisible'];
+  defaultOpen?: RcTooltipProps['defaultVisible'];
+  /**
+   * @deprecated `onVisibleChange` is deprecated which will be removed in next major version. Please
+   *   use `onOpenChange` instead.
+   */
+  onVisibleChange?: RcTooltipProps['onVisibleChange'];
+  onOpenChange?: RcTooltipProps['onVisibleChange'];
+  /**
+   * @deprecated `afterVisibleChange` is deprecated which will be removed in next major version.
+   *   Please use `afterOpenChange` instead.
+   */
+  afterVisibleChange?: RcTooltipProps['afterVisibleChange'];
+  afterOpenChange?: RcTooltipProps['afterVisibleChange'];
+}
 
-export interface AbstractTooltipProps extends Partial<Omit<RcTooltipProps, 'children'>> {
+export interface AbstractTooltipProps extends LegacyTooltipProps {
   style?: React.CSSProperties;
   className?: string;
   color?: LiteralUnion<PresetColorType, string>;
@@ -57,7 +92,7 @@ export type RenderFunction = () => React.ReactNode;
 
 export interface TooltipPropsWithOverlay extends AbstractTooltipProps {
   title?: React.ReactNode | RenderFunction;
-  overlay: React.ReactNode | RenderFunction;
+  overlay?: React.ReactNode | RenderFunction;
 }
 
 export interface TooltipPropsWithTitle extends AbstractTooltipProps {
@@ -67,9 +102,12 @@ export interface TooltipPropsWithTitle extends AbstractTooltipProps {
 
 export declare type TooltipProps = TooltipPropsWithTitle | TooltipPropsWithOverlay;
 
-const splitObject = (obj: any, keys: string[]) => {
-  const picked: any = {};
-  const omitted: any = { ...obj };
+const splitObject = <T extends React.CSSProperties>(
+  obj: T,
+  keys: (keyof T)[],
+): Record<'picked' | 'omitted', T> => {
+  const picked: T = {} as T;
+  const omitted: T = { ...obj };
   keys.forEach(key => {
     if (obj && key in obj) {
       picked[key] = obj[key];
@@ -78,6 +116,7 @@ const splitObject = (obj: any, keys: string[]) => {
   });
   return { picked, omitted };
 };
+
 const PresetColorRegex = new RegExp(`^(${PresetColorTypes.join('|')})(-inverse)?$`);
 
 // Fix Tooltip won't hide at disabled button
@@ -87,7 +126,8 @@ function getDisabledCompatibleChildren(element: React.ReactElement<any>, prefixC
   const elementType = element.type as any;
   if (
     ((elementType.__ANT_BUTTON === true || element.type === 'button') && element.props.disabled) ||
-    (elementType.__ANT_SWITCH === true && (element.props.disabled || element.props.loading))
+    (elementType.__ANT_SWITCH === true && (element.props.disabled || element.props.loading)) ||
+    (elementType.__ANT_RADIO === true && element.props.disabled)
   ) {
     // Pick some layout related style properties up to span
     // Prevent layout bugs like https://github.com/ant-design/ant-design/issues/5254
@@ -101,13 +141,13 @@ function getDisabledCompatibleChildren(element: React.ReactElement<any>, prefixC
       'display',
       'zIndex',
     ]);
-    const spanStyle = {
+    const spanStyle: React.CSSProperties = {
       display: 'inline-block', // default inline-block is important
       ...picked,
       cursor: 'not-allowed',
-      width: element.props.block ? '100%' : null,
+      width: element.props.block ? '100%' : undefined,
     };
-    const buttonStyle = {
+    const buttonStyle: React.CSSProperties = {
       ...omitted,
       pointerEvents: 'none',
     };
@@ -134,9 +174,25 @@ const Tooltip = React.forwardRef<unknown, TooltipProps>((props, ref) => {
     direction,
   } = React.useContext(ConfigContext);
 
-  const [visible, setVisible] = useMergedState(false, {
-    value: props.visible,
-    defaultValue: props.defaultVisible,
+  // Warning for deprecated usage
+  if (process.env.NODE_ENV !== 'production') {
+    [
+      ['visible', 'open'],
+      ['defaultVisible', 'defaultOpen'],
+      ['onVisibleChange', 'onOpenChange'],
+      ['afterVisibleChange', 'afterOpenChange'],
+    ].forEach(([deprecatedName, newName]) => {
+      warning(
+        !(deprecatedName in props),
+        'Tooltip',
+        `\`${deprecatedName}\` is deprecated which will be removed in next major version, please use \`${newName}\` instead.`,
+      );
+    });
+  }
+
+  const [open, setOpen] = useMergedState(false, {
+    value: props.open !== undefined ? props.open : props.visible,
+    defaultValue: props.defaultOpen !== undefined ? props.defaultOpen : props.defaultVisible,
   });
 
   const isNoTitle = () => {
@@ -144,16 +200,17 @@ const Tooltip = React.forwardRef<unknown, TooltipProps>((props, ref) => {
     return !title && !overlay && title !== 0; // overlay for old version compatibility
   };
 
-  const onVisibleChange = (vis: boolean) => {
-    setVisible(isNoTitle() ? false : vis);
+  const onOpenChange = (vis: boolean) => {
+    setOpen(isNoTitle() ? false : vis);
 
     if (!isNoTitle()) {
+      props.onOpenChange?.(vis);
       props.onVisibleChange?.(vis);
     }
   };
 
   const getTooltipPlacements = () => {
-    const { builtinPlacements, arrowPointAtCenter, autoAdjustOverflow } = props;
+    const { builtinPlacements, arrowPointAtCenter = false, autoAdjustOverflow = true } = props;
     return (
       builtinPlacements ||
       getPlacements({
@@ -164,32 +221,31 @@ const Tooltip = React.forwardRef<unknown, TooltipProps>((props, ref) => {
   };
 
   // 动态设置动画点
-  const onPopupAlign = (domNode: HTMLElement, align: any) => {
-    const placements: any = getTooltipPlacements();
+  const onPopupAlign = (domNode: HTMLElement, align: AlignType) => {
+    const placements = getTooltipPlacements();
     // 当前返回的位置
     const placement = Object.keys(placements).find(
       key =>
-        placements[key].points[0] === align.points[0] &&
-        placements[key].points[1] === align.points[1],
+        placements[key].points![0] === align.points?.[0] &&
+        placements[key].points![1] === align.points?.[1],
     );
     if (!placement) {
       return;
     }
     // 根据当前坐标设置动画点
     const rect = domNode.getBoundingClientRect();
-    const transformOrigin = {
-      top: '50%',
-      left: '50%',
-    };
-    if (placement.indexOf('top') >= 0 || placement.indexOf('Bottom') >= 0) {
-      transformOrigin.top = `${rect.height - align.offset[1]}px`;
-    } else if (placement.indexOf('Top') >= 0 || placement.indexOf('bottom') >= 0) {
-      transformOrigin.top = `${-align.offset[1]}px`;
+
+    const transformOrigin = { top: '50%', left: '50%' };
+
+    if (['top', 'Bottom'].includes(placement)) {
+      transformOrigin.top = `${rect.height - align.offset![1]}px`;
+    } else if (['Top', 'bottom'].includes(placement)) {
+      transformOrigin.top = `${-align.offset![1]}px`;
     }
-    if (placement.indexOf('left') >= 0 || placement.indexOf('Right') >= 0) {
-      transformOrigin.left = `${rect.width - align.offset[0]}px`;
-    } else if (placement.indexOf('right') >= 0 || placement.indexOf('Left') >= 0) {
-      transformOrigin.left = `${-align.offset[0]}px`;
+    if (['left', 'Right'].includes(placement)) {
+      transformOrigin.left = `${rect.width - align.offset![0]}px`;
+    } else if (['right', 'Left'].includes(placement)) {
+      transformOrigin.left = `${-align.offset![0]}px`;
     }
     domNode.style.transformOrigin = `${transformOrigin.left} ${transformOrigin.top}`;
   };
@@ -202,7 +258,13 @@ const Tooltip = React.forwardRef<unknown, TooltipProps>((props, ref) => {
     return overlay || title || '';
   };
 
-  const { getPopupContainer, ...otherProps } = props;
+  const {
+    getPopupContainer,
+    placement = 'top',
+    mouseEnterDelay = 0.1,
+    mouseLeaveDelay = 0.1,
+    ...otherProps
+  } = props;
 
   const {
     prefixCls: customizePrefixCls,
@@ -216,20 +278,23 @@ const Tooltip = React.forwardRef<unknown, TooltipProps>((props, ref) => {
   const prefixCls = getPrefixCls('tooltip', customizePrefixCls);
   const rootPrefixCls = getPrefixCls();
 
-  let tempVisible = visible;
+  let tempOpen = open;
   // Hide tooltip when there is no title
-  if (!('visible' in props) && isNoTitle()) {
-    tempVisible = false;
+  if (!('open' in props) && !('visible' in props) && isNoTitle()) {
+    tempOpen = false;
   }
 
   const child = getDisabledCompatibleChildren(
-    isValidElement(children) ? children : <span>{children}</span>,
+    isValidElement(children) && !isFragment(children) ? children : <span>{children}</span>,
     prefixCls,
   );
   const childProps = child.props;
-  const childCls = classNames(childProps.className, {
-    [openClassName || `${prefixCls}-open`]: true,
-  });
+  const childCls =
+    !childProps.className || typeof childProps.className === 'string'
+      ? classNames(childProps.className, {
+          [openClassName || `${prefixCls}-open`]: true,
+        })
+      : childProps.className;
 
   const customOverlayClassName = classNames(overlayClassName, {
     [`${prefixCls}-rtl`]: direction === 'rtl',
@@ -237,7 +302,7 @@ const Tooltip = React.forwardRef<unknown, TooltipProps>((props, ref) => {
   });
 
   let formattedOverlayInnerStyle = overlayInnerStyle;
-  let arrowContentStyle;
+  let arrowContentStyle: React.CSSProperties = {};
   if (color && !PresetColorRegex.test(color)) {
     formattedOverlayInnerStyle = { ...overlayInnerStyle, background: color };
     // @ts-ignore
@@ -247,14 +312,17 @@ const Tooltip = React.forwardRef<unknown, TooltipProps>((props, ref) => {
   return (
     <RcTooltip
       {...otherProps}
+      placement={placement}
+      mouseEnterDelay={mouseEnterDelay}
+      mouseLeaveDelay={mouseLeaveDelay}
       prefixCls={prefixCls}
       overlayClassName={customOverlayClassName}
       getTooltipContainer={getPopupContainer || getTooltipContainer || getContextPopupContainer}
       ref={ref}
       builtinPlacements={getTooltipPlacements()}
       overlay={getOverlay()}
-      visible={tempVisible}
-      onVisibleChange={onVisibleChange}
+      visible={tempOpen}
+      onVisibleChange={onOpenChange}
       onPopupAlign={onPopupAlign}
       overlayInnerStyle={formattedOverlayInnerStyle}
       arrowContent={<span className={`${prefixCls}-arrow-content`} style={arrowContentStyle} />}
@@ -263,7 +331,7 @@ const Tooltip = React.forwardRef<unknown, TooltipProps>((props, ref) => {
         motionDeadline: 1000,
       }}
     >
-      {tempVisible ? cloneElement(child, { className: childCls }) : child}
+      {tempOpen ? cloneElement(child, { className: childCls }) : child}
     </RcTooltip>
   );
 });
@@ -271,13 +339,5 @@ const Tooltip = React.forwardRef<unknown, TooltipProps>((props, ref) => {
 if (process.env.NODE_ENV !== 'production') {
   Tooltip.displayName = 'Tooltip';
 }
-
-Tooltip.defaultProps = {
-  placement: 'top' as TooltipPlacement,
-  mouseEnterDelay: 0.1,
-  mouseLeaveDelay: 0.1,
-  arrowPointAtCenter: false,
-  autoAdjustOverflow: true,
-};
 
 export default Tooltip;

@@ -12,6 +12,7 @@ import { NoFormStyle } from '../form/context';
 import LocaleReceiver from '../locale-provider/LocaleReceiver';
 import { getTransitionName } from '../_util/motion';
 import { canUseDocElement } from '../_util/styleChecker';
+import warning from '../_util/warning';
 import { getConfirmLocale } from './locale';
 
 let mousePosition: { x: number; y: number } | null;
@@ -37,7 +38,12 @@ if (canUseDocElement()) {
 
 export interface ModalProps {
   /** 对话框是否可见 */
+  /**
+   * @deprecated `visible` is deprecated which will be removed in next major version. Please use
+   *   `open` instead.
+   */
   visible?: boolean;
+  open?: boolean;
   /** 确定按钮 loading */
   confirmLoading?: boolean;
   /** 标题 */
@@ -92,7 +98,12 @@ type getContainerFunc = () => HTMLElement;
 export interface ModalFuncProps {
   prefixCls?: string;
   className?: string;
+  /**
+   * @deprecated `visible` is deprecated which will be removed in next major version. Please use
+   *   `open` instead.
+   */
   visible?: boolean;
+  open?: boolean;
   title?: React.ReactNode;
   closable?: boolean;
   content?: React.ReactNode;
@@ -151,34 +162,23 @@ const Modal: React.FC<ModalProps> = props => {
     onOk?.(e);
   };
 
-  const renderFooter = (locale: ModalLocale) => {
-    const { okText, okType, cancelText, confirmLoading } = props;
-    return (
-      <>
-        <Button onClick={handleCancel} {...props.cancelButtonProps}>
-          {cancelText || locale.cancelText}
-        </Button>
-        <Button
-          {...convertLegacyProps(okType)}
-          loading={confirmLoading}
-          onClick={handleOk}
-          {...props.okButtonProps}
-        >
-          {okText || locale.okText}
-        </Button>
-      </>
-    );
-  };
+  warning(
+    !('visible' in props),
+    'Modal',
+    `\`visible\` will be removed in next major version, please use \`open\` instead.`,
+  );
 
   const {
     prefixCls: customizePrefixCls,
     footer,
     visible,
+    open = false,
     wrapClassName,
     centered,
     getContainer,
     closeIcon,
     focusTriggerAfterClose = true,
+    width = 520,
     ...restProps
   } = props;
 
@@ -187,7 +187,25 @@ const Modal: React.FC<ModalProps> = props => {
 
   const defaultFooter = (
     <LocaleReceiver componentName="Modal" defaultLocale={getConfirmLocale()}>
-      {renderFooter}
+      {contextLocale => {
+        const { okText, okType = 'primary', cancelText, confirmLoading = false } = props;
+
+        return (
+          <>
+            <Button onClick={handleCancel} {...props.cancelButtonProps}>
+              {cancelText || contextLocale.cancelText}
+            </Button>
+            <Button
+              {...convertLegacyProps(okType)}
+              loading={confirmLoading}
+              onClick={handleOk}
+              {...props.okButtonProps}
+            >
+              {okText ?? contextLocale.okText}
+            </Button>
+          </>
+        );
+      }}
     </LocaleReceiver>
   );
 
@@ -204,6 +222,7 @@ const Modal: React.FC<ModalProps> = props => {
   return (
     <NoFormStyle status override>
       <Dialog
+        width={width}
         {...restProps}
         getContainer={
           getContainer === undefined ? (getContextPopupContainer as getContainerFunc) : getContainer
@@ -211,7 +230,7 @@ const Modal: React.FC<ModalProps> = props => {
         prefixCls={prefixCls}
         wrapClassName={wrapClassNameExtended}
         footer={footer === undefined ? defaultFooter : footer}
-        visible={visible}
+        visible={open || visible}
         mousePosition={mousePosition}
         onClose={handleCancel}
         closeIcon={closeIconToRender}
@@ -221,13 +240,6 @@ const Modal: React.FC<ModalProps> = props => {
       />
     </NoFormStyle>
   );
-};
-
-Modal.defaultProps = {
-  width: 520,
-  confirmLoading: false,
-  visible: false,
-  okType: 'primary' as LegacyButtonType,
 };
 
 export default Modal;

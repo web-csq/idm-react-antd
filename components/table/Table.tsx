@@ -35,6 +35,7 @@ import type { SortState } from './hooks/useSorter';
 import useSorter, { getSortData } from './hooks/useSorter';
 import useTitleColumns from './hooks/useTitleColumns';
 import type {
+  ColumnTitleProps,
   ColumnType,
   ExpandableConfig,
   ExpandType,
@@ -119,7 +120,7 @@ function InternalTable<RecordType extends object = any>(
     dataSource,
     pagination,
     rowSelection,
-    rowKey,
+    rowKey = 'key',
     rowClassName,
     columns,
     children,
@@ -143,6 +144,17 @@ function InternalTable<RecordType extends object = any>(
     'Table',
     '`index` parameter of `rowKey` function is deprecated. There is no guarantee that it will work as expected.',
   );
+
+  [
+    ['filterDropdownVisible', 'filterDropdownOpen'],
+    ['onFilterDropdownVisibleChange', 'onFilterDropdownOpenChange'],
+  ].forEach(([deprecatedName, newName]) => {
+    warning(
+      !(deprecatedName in props),
+      'Table',
+      `\`${deprecatedName}\` is deprecated which will be removed in next major version.Please use \`${newName}\` instead. `,
+    );
+  });
 
   const baseColumns = React.useMemo(
     () => columns || (convertChildrenToColumns(children) as ColumnsType<RecordType>),
@@ -186,7 +198,7 @@ function InternalTable<RecordType extends object = any>(
   };
   const { childrenColumnName = 'children' } = mergedExpandable;
 
-  const expandType: ExpandType = React.useMemo<ExpandType>(() => {
+  const expandType = React.useMemo<ExpandType>(() => {
     if (rawData.some(item => (item as any)?.[childrenColumnName])) {
       return 'nest';
     }
@@ -258,7 +270,8 @@ function InternalTable<RecordType extends object = any>(
   /**
    * Controlled state in `columns` is not a good idea that makes too many code (1000+ line?) to read
    * state out and then put it back to title render. Move these code into `hooks` but still too
-   * complex. We should provides Table props like `sorter` & `filter` to handle control in next big version.
+   * complex. We should provides Table props like `sorter` & `filter` to handle control in next big
+   * version.
    */
 
   // ============================ Sorter =============================
@@ -306,7 +319,7 @@ function InternalTable<RecordType extends object = any>(
     );
   };
 
-  const [transformFilterColumns, filterStates, getFilters] = useFilter<RecordType>({
+  const [transformFilterColumns, filterStates, filters] = useFilter<RecordType>({
     prefixCls,
     locale: tableLocale,
     dropdownPrefixCls,
@@ -316,16 +329,23 @@ function InternalTable<RecordType extends object = any>(
   });
   const mergedData = getFilterData(sortedData, filterStates);
 
-  changeEventInfo.filters = getFilters();
+  changeEventInfo.filters = filters;
   changeEventInfo.filterStates = filterStates;
 
   // ============================ Column ============================
-  const columnTitleProps = React.useMemo(
-    () => ({
+  const columnTitleProps = React.useMemo<ColumnTitleProps<RecordType>>(() => {
+    const mergedFilters: Record<string, FilterValue> = {};
+    Object.keys(filters).forEach(filterKey => {
+      if (filters[filterKey] !== null) {
+        mergedFilters[filterKey] = filters[filterKey]!;
+      }
+    });
+    return {
       ...sorterTitleProps,
-    }),
-    [sorterTitleProps],
-  );
+      filters: mergedFilters,
+    };
+  }, [sorterTitleProps, filters]);
+
   const [transformTitleColumns] = useTitleColumns(columnTitleProps);
 
   // ========================== Pagination ==========================
@@ -394,7 +414,7 @@ function InternalTable<RecordType extends object = any>(
   });
 
   const internalRowClassName = (record: RecordType, index: number, indent: number) => {
-    let mergedRowClassName;
+    let mergedRowClassName: string;
     if (typeof rowClassName === 'function') {
       mergedRowClassName = classNames(rowClassName(record, index, indent));
     } else {
@@ -462,8 +482,8 @@ function InternalTable<RecordType extends object = any>(
     const defaultPosition = direction === 'rtl' ? 'left' : 'right';
     const { position } = mergedPagination;
     if (position !== null && Array.isArray(position)) {
-      const topPos = position.find(p => p.indexOf('top') !== -1);
-      const bottomPos = position.find(p => p.indexOf('bottom') !== -1);
+      const topPos = position.find(p => p.includes('top'));
+      const bottomPos = position.find(p => p.includes('bottom'));
       const isDisable = position.every(p => `${p}` === 'none');
       if (!topPos && !bottomPos && !isDisable) {
         bottomPaginationNode = renderPagination(defaultPosition);
@@ -537,7 +557,6 @@ const ForwardTable = React.forwardRef(InternalTable) as <RecordType extends obje
 type InternalTableType = typeof ForwardTable;
 
 interface TableInterface extends InternalTableType {
-  defaultProps?: Partial<TableProps<any>>;
   SELECTION_COLUMN: typeof SELECTION_COLUMN;
   EXPAND_COLUMN: typeof RcTable.EXPAND_COLUMN;
   SELECTION_ALL: 'SELECT_ALL';
@@ -549,10 +568,6 @@ interface TableInterface extends InternalTableType {
 }
 
 const Table = ForwardTable as TableInterface;
-
-Table.defaultProps = {
-  rowKey: 'key',
-};
 
 Table.SELECTION_COLUMN = SELECTION_COLUMN;
 Table.EXPAND_COLUMN = RcTable.EXPAND_COLUMN;

@@ -1294,7 +1294,7 @@ Array [
       </div>
     </div>
   </div>,
-  "Another Row:",
+  Another Row:,
   <div
     class="ant-row"
     style="margin-left:-8px;margin-right:-8px;margin-top:-8px;margin-bottom:-8px"
@@ -1340,7 +1340,6 @@ Array [
   &lt;Col span={6} /&gt;
   &lt;Col span={6} /&gt;
   &lt;Col span={6} /&gt;
-
   &lt;Col span={6} /&gt;
   &lt;Col span={6} /&gt;
   &lt;Col span={6} /&gt;
@@ -1421,4 +1420,10 @@ exports[`renders ./components/grid/demo/sort.md extend context correctly 1`] = `
 </div>
 `;
 
-exports[`renders ./components/grid/demo/useBreakpoint.md extend context correctly 1`] = `null`;
+exports[`renders ./components/grid/demo/useBreakpoint.md extend context correctly 1`] = `
+Array [
+  Current break point:,
+  <!-- -->,
+   ,
+]
+`;

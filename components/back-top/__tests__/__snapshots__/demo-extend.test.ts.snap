@@ -5,13 +5,13 @@ Array [
   <div
     class="ant-back-top"
   />,
-  "Scroll down to see the bottom-right",
+  Scroll down to see the bottom-right,
   <strong
     class="site-back-top-basic"
   >
      gray 
   </strong>,
-  "button.",
+  button.,
 ]
 `;
 

@@ -645,7 +645,6 @@ exports[`renders ./components/tree-select/demo/checkable.md extend context corre
             aria-hidden="true"
             class="ant-select-selection-search-mirror"
           >
-             
           </span>
         </div>
       </div>
@@ -845,7 +844,6 @@ exports[`renders ./components/tree-select/demo/multiple.md extend context correc
             aria-hidden="true"
             class="ant-select-selection-search-mirror"
           >
-             
           </span>
         </div>
       </div>
@@ -1738,7 +1736,6 @@ exports[`renders ./components/tree-select/demo/status.md extend context correctl
                 aria-hidden="true"
                 class="ant-select-selection-search-mirror"
               >
-                 
               </span>
             </div>
           </div>

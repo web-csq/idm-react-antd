@@ -7,7 +7,7 @@ import { ConfigContext } from '../config-provider';
 import DisabledContext from '../config-provider/DisabledContext';
 import type { SizeType } from '../config-provider/SizeContext';
 import SizeContext from '../config-provider/SizeContext';
-import { cloneElement } from '../_util/reactNode';
+import { cloneElement, isFragment } from '../_util/reactNode';
 import { tuple } from '../_util/type';
 import warning from '../_util/warning';
 import Wave from '../_util/wave';
@@ -24,12 +24,8 @@ function isUnBorderedButtonType(type: ButtonType | undefined) {
   return type === 'text' || type === 'link';
 }
 
-function isReactFragment(node: React.ReactNode) {
-  return React.isValidElement(node) && node.type === React.Fragment;
-}
-
 // Insert one space between two chinese characters automatically.
-function insertSpace(child: React.ReactChild, needInserted: boolean) {
+function insertSpace(child: React.ReactElement | string | number, needInserted: boolean) {
   // Check the child if is undefined or null.
   if (child === null || child === undefined) {
     return;
@@ -49,7 +45,7 @@ function insertSpace(child: React.ReactChild, needInserted: boolean) {
   if (typeof child === 'string') {
     return isTwoCNChar(child) ? <span>{child.split('').join(SPACE)}</span> : <span>{child}</span>;
   }
-  if (isReactFragment(child)) {
+  if (isFragment(child)) {
     return <span>{child}</span>;
   }
   return child;
@@ -74,7 +70,7 @@ function spaceChildren(children: React.ReactNode, needInserted: boolean) {
 
   // Pass to React.Children.map to auto fill key
   return React.Children.map(childList, child =>
-    insertSpace(child as React.ReactChild, needInserted),
+    insertSpace(child as React.ReactElement | string | number, needInserted),
   );
 }
 
@@ -134,6 +130,7 @@ export type ButtonProps = Partial<AnchorButtonProps & NativeButtonProps>;
 interface CompoundedComponent
   extends React.ForwardRefExoticComponent<ButtonProps & React.RefAttributes<HTMLElement>> {
   Group: typeof Group;
+  /** @internal */
   __ANT_BUTTON: boolean;
 }
 

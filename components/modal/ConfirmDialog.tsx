@@ -24,6 +24,7 @@ const ConfirmDialog = (props: ConfirmDialogProps) => {
     zIndex,
     afterClose,
     visible,
+    open,
     keyboard,
     centered,
     getContainer,
@@ -44,11 +45,19 @@ const ConfirmDialog = (props: ConfirmDialogProps) => {
     focusTriggerAfterClose,
   } = props;
 
-  warning(
-    !(typeof icon === 'string' && icon.length > 2),
-    'Modal',
-    `\`icon\` is using ReactNode instead of string naming in v4. Please check \`${icon}\` at https://ant.design/components/icon`,
-  );
+  if (process.env.NODE_ENV !== 'production') {
+    warning(
+      !(typeof icon === 'string' && icon.length > 2),
+      'Modal',
+      `\`icon\` is using ReactNode instead of string naming in v4. Please check \`${icon}\` at https://ant.design/components/icon`,
+    );
+
+    warning(
+      visible === undefined,
+      'Modal',
+      `\`visible\` is deprecated, please use \`open\` instead.`,
+    );
+  }
 
   // 支持传入{ icon: null }来隐藏`Modal.confirm`默认的Icon
   const okType = props.okType || 'primary';
@@ -90,8 +99,8 @@ const ConfirmDialog = (props: ConfirmDialogProps) => {
           { [`${contentPrefixCls}-centered`]: !!props.centered },
           wrapClassName,
         )}
-        onCancel={() => close({ triggerCancel: true })}
-        visible={visible}
+        onCancel={() => close?.({ triggerCancel: true })}
+        open={open || visible}
         title=""
         footer=""
         transitionName={getTransitionName(rootPrefixCls, 'zoom', props.transitionName)}

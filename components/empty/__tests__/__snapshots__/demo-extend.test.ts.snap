@@ -648,7 +648,10 @@ exports[`renders ./components/empty/demo/config-provider.md extend context corre
           <span
             class="ant-transfer-list-header-selected"
           >
-            0 item
+            0
+            <!-- -->
+            <!-- -->
+            item
           </span>
           <span
             class="ant-transfer-list-header-title"
@@ -935,7 +938,10 @@ exports[`renders ./components/empty/demo/config-provider.md extend context corre
           <span
             class="ant-transfer-list-header-selected"
           >
-            0 item
+            0
+            <!-- -->
+            <!-- -->
+            item
           </span>
           <span
             class="ant-transfer-list-header-title"

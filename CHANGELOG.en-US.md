@@ -15,6 +15,245 @@ timeline: true
 
 ---
 
+## 4.23.6
+
+`2022-10-17`
+
+- Table
+  - 🐞 Fix Table with sticky header shadow style issue. [#38023](https://github.com/ant-design/ant-design/pull/38023) [@liuycy](https://github.com/liuycy)
+  - 🐞 Fix Table with `ellipsis` missing `title` attribute. [416c61f](https://github.com/ant-design/ant-design/commit/416c61f)
+- 🐞 Fix Breadcrumb not support number `0`. [#38006](https://github.com/ant-design/ant-design/pull/38006) [@li-jia-nan](https://github.com/li-jia-nan)
+- Input
+  - 🐞 Fix Input.TextArea render extra input node when enable `autoSize`. [#38050](https://github.com/ant-design/ant-design/pull/38050)
+  - 🐞 Fix Input.Password that should not have value prop on input after click toggle icon. [#37900](https://github.com/ant-design/ant-design/pull/37900) [@linxianxi](https://github.com/linxianxi)
+  - 💄 Fix border style issues for Input.Search in RTL. [#37980](https://github.com/ant-design/ant-design/pull/37980) [@foryuki](https://github.com/foryuki)
+- 🐞 Fix AutoComplete warning for unused `dropdownClassName`. [#37974](https://github.com/ant-design/ant-design/pull/37974) [@heiyu4585](https://github.com/heiyu4585)
+- 🐞 Fix Typography with ellipsis that the computed `fontSize` style be calculated as empty string in some case. [#37928](https://github.com/ant-design/ant-design/pull/37928) [@zheeeng](https://github.com/zheeeng)
+- 🐞 Fix editable Tabs add button missing in edge case. [#37937](https://github.com/ant-design/ant-design/pull/37937)
+- 🐞 Fix RangePicker panel blink in some case. [#439](https://github.com/react-component/picker/pull/439)
+- 🛠 Refactor Spin with Function Component. [#37969](https://github.com/ant-design/ant-design/pull/37969) [@li-jia-nan](https://github.com/li-jia-nan)
+- 🛠 Refactor Statistic.Countdown with Function Component. [#37938](https://github.com/ant-design/ant-design/pull/37938) [@li-jia-nan](https://github.com/li-jia-nan)
+
+## 4.23.5
+
+`2022-10-10`
+
+- 🐞 Fix Textarea with `autoSize` blink on the fist mount. [#37847](https://github.com/ant-design/ant-design/pull/37847)
+- 💄 Fix Input.Password `style={{ fontSize }}`not working. [#37898](https://github.com/ant-design/ant-design/pull/37898)
+- 💄 Fix Input.Textarea `style={{ resize: 'none' }}` is not working when `showCount` is applied. [#37855](https://github.com/ant-design/ant-design/pull/37855) [@kiner-tang](https://github.com/kiner-tang)
+- 💄 Fix Input.Search border style in RTL. [#37865](https://github.com/ant-design/ant-design/pull/37865) [@foryuki](https://github.com/foryuki)
+- 🇷🇺 Fix Russian translation for Transfer.selectInvert. [#37858](https://github.com/ant-design/ant-design/pull/37858) [@svtslav](https://github.com/svtslav)
+- 🇵🇹 Add missing Portuguese translations. [#37857](https://github.com/ant-design/ant-design/pull/37857) [@ernestfolch](https://github.com/ernestfolch)
+- ⚡️ Update Table and Tree for improve state performance. [#37875](https://github.com/ant-design/ant-design/pull/37875) [@sunteago](https://github.com/sunteago)
+- TypeScript
+  - 🤖 Update type definition for a part of components. [#37861](https://github.com/ant-design/ant-design/pull/37861) [@zheeeng](https://github.com/zheeeng)
+
+## 4.23.4
+
+`2022-10-01`
+
+- 🐞 Fix Typography ellipsis percision bug. [#37802](https://github.com/ant-design/ant-design/pull/37802) [@zheeeng](https://github.com/zheeeng)
+- 🐞 Fix Input.Password that should not have value prop on input when inputing. [#37801](https://github.com/ant-design/ant-design/pull/37801) [@MadCcc](https://github.com/MadCcc)
+
+## 4.23.3
+
+`2022-09-27`
+
+- 🆕 Tree `showLeafIcon` could accept ReactNode for a custom leaf icon.[#37144](https://github.com/ant-design/ant-design/pull/37144) [@xWiiLLz](https://github.com/xWiiLLz)
+- 🆕 Uploader support Apple image format: heic, heif. [#37651](https://github.com/ant-design/ant-design/pull/37651) [@Johnny-young](https://github.com/Johnny-young)
+- 🐞 Fix Typography `copyable.tooltip=false` still shows the copied tooltip. [#37754](https://github.com/ant-design/ant-design/pull/37754)
+- 🐞 Fix Typography `ellipsis` not working correctly in some cases. [#37700](https://github.com/ant-design/ant-design/pull/37700) [@zheeeng](https://github.com/zheeeng)
+- 🐞 Fix Divider shows `children` when in `vertical` mode. [#37697](https://github.com/ant-design/ant-design/pull/37697)
+- 🐞 Fix Anchor `getCurrentAnchor` not updated. [#37644](https://github.com/ant-design/ant-design/pull/37644)
+- 🐞 Fix Tabs `animated: true` missing tabPane animation. [#37642](https://github.com/ant-design/ant-design/pull/37642)
+- 🐞 Fix Table `column.title` render function missing `filters` props. [#37629](https://github.com/ant-design/ant-design/pull/37629)
+- 🐞 Fix Modal.confirm instance ref legacy config `visible: true` back to show not work. [#37613](https://github.com/ant-design/ant-design/pull/37613)
+- 💄 Fix the problem of rendering an empty element with styles when Badge not pass `text` property. [#37681](https://github.com/ant-design/ant-design/pull/37681) [@Wxh16144](https://github.com/Wxh16144)
+- 💄 Fix Button wave style not work in shadow dom. [#37677](https://github.com/ant-design/ant-design/pull/37677)
+- 💄 Remove Tab.TabPane outline style when focused. [#37638](https://github.com/ant-design/ant-design/pull/37638)
+- TypeScript
+  - 🤖 Update `FilterSearchType` definition for Table. [#37610](https://github.com/ant-design/ant-design/pull/37610) [@kiner-tang](https://github.com/kiner-tang)
+- 🌐 Localization
+  - 🇵🇹 Add missing translations for 'Select all data' / 'Invert current page' for Transfer in pt_PT.[#37682](https://github.com/ant-design/ant-design/pull/37682) [@Dreamcreative](https://github.com/Dreamcreative), [#37701](https://github.com/ant-design/ant-design/pull/37701) [@hugobarragon](https://github.com/hugobarragon)
+
+## 4.23.2
+
+`2022-09-17`
+
+- 🐞 Fix Card console warning when using `tabList` prop. [#37537](https://github.com/ant-design/ant-design/pull/37537) [@edc-hui](https://github.com/edc-hui)
+- 🐞 Fix Table `filterSearch` is not executed when `filterMode="tree"`. [#37587](https://github.com/ant-design/ant-design/pull/37587) [@edc-hui](https://github.com/edc-hui)
+- 🐞 Fix Tooltip should not replace children `className` when it's not a string type. [#37598](https://github.com/ant-design/ant-design/pull/37598)
+- 🐞 Fix Tree that TreeNodes not aligned when draggable and some node is disabled. [#37534](https://github.com/ant-design/ant-design/pull/37534)
+- TypeScript
+  - 🤖 Replace deprecated `React.ReactChild` type. [#37551](https://github.com/ant-design/ant-design/pull/37551) [@bowen-wu](https://github.com/bowen-wu)
+
+## 4.23.1
+
+`2022-09-09`
+
+- 🐞 Fix unable to close modal when using visible in `Modal.confirm().update`. [#37471](https://github.com/ant-design/ant-design/pull/37471) [@Aaron674092290](https://github.com/Aaron674092290)
+- 🐞 Fix esbuild strict mode call `No matching export theme` error. [#37462](https://github.com/ant-design/ant-design/pull/37462)
+- 🐞 Fix Switch background flush issue by reverting [#35103](https://github.com/ant-design/ant-design/pull/35103). [#37458](https://github.com/ant-design/ant-design/pull/37458)
+- TypeScript
+  - 🤖 InputNumber `value` add null type. [#37421](https://github.com/ant-design/ant-design/pull/37421) [@li-jia-nan](https://github.com/li-jia-nan)
+
+## 4.23.0
+
+`2022-09-04`
+
+- 🆕 Tooltip support nested Fragment child nodes to display bubbles. [#37045](https://github.com/ant-design/ant-design/pull/37045) [@HQ-Lin](https://github.com/HQ-Lin)
+- 🆕 Dropdown.Button support `danger` props. [#36810](https://github.com/ant-design/ant-design/pull/36810) [@nuintun](https://github.com/nuintun)
+- 🆕 Input.TextArea add `value` parameter to `showCount.formatter`. [#36793](https://github.com/ant-design/ant-design/pull/36793) [@JarvisArt](https://github.com/JarvisArt)
+- 🆕 Table support `expandable.columnTitle` now. [#36794](https://github.com/ant-design/ant-design/pull/36794) [@losgif](https://github.com/losgif)
+- Deprecate `visible` in all components and change to `open`.
+  - 🛠 Dropdown changes `visible` to `open`. [#37232](https://github.com/ant-design/ant-design/pull/37232) [@yykoypj](https://github.com/yykoypj)
+  - 🛠 Modal changes `visible` to `open`. [#37084](https://github.com/ant-design/ant-design/pull/37084) [@yykoypj](https://github.com/yykoypj)
+  - 🛠 Drawer changes `visible` to `open`. [#37047](https://github.com/ant-design/ant-design/pull/37047) [@yykoypj](https://github.com/yykoypj)
+  - 🛠 Table changes `filterDropdownVisible` to `filterDropdownOpen`. [#37026](https://github.com/ant-design/ant-design/pull/37026) [@yykoypj](https://github.com/yykoypj)
+  - 🛠 Slider add `tooltip` prop for all props related with Tooltip. [#37000](https://github.com/ant-design/ant-design/pull/37000) [@yykoypj](https://github.com/yykoypj)
+  - 🛠 Tooltip Popover and Popconfirm change `visible` to `open`. [#37241](https://github.com/ant-design/ant-design/pull/37241) [@yykoypj](https://github.com/yykoypj)
+  - 🛠 Deprecate `visible` prop of Tag. [#36934](https://github.com/ant-design/ant-design/pull/36934) [@yykoypj](https://github.com/yykoypj)
+- 🛠 Deprecate `dropdownClassName` prop of all components and change to `popupClassName`. [#36880](https://github.com/ant-design/ant-design/pull/36880) [@heiyu4585](https://github.com/heiyu4585)
+- 🛠 Tabs support `items` props and origin jsx usage will be depreacted. [#36889](https://github.com/ant-design/ant-design/pull/36889)
+- 🐞 Fix that some css variables are not consistent with less variables.
+  - [#37064](https://github.com/ant-design/ant-design/pull/37064) [@TrickyPi](https://github.com/TrickyPi)
+  - [#37304](https://github.com/ant-design/ant-design/pull/37304) [@peritot](https://github.com/peritot)
+- 🐞 Fix Menu disabled item focus style. [#37332](https://github.com/ant-design/ant-design/pull/37332)
+- 💄 `@border-radius-sm` should not follow `@border-radius-base` by default. [#37309](https://github.com/ant-design/ant-design/pull/37309)
+- 💄 add `@slider-handle-margin-left` to custom type. [#37001](https://github.com/ant-design/ant-design/pull/37001) [@alanhaledc](https://github.com/alanhaledc)
+- 💄 Replace Tabs with fade switch motion to import switch experience. [#36943](https://github.com/ant-design/ant-design/pull/36943)
+- ⌨️ Improve Form validation accessibility experience. [#36762](https://github.com/ant-design/ant-design/pull/36762) [@VladimirOtroshchenko](https://github.com/VladimirOtroshchenko)
+- 🌐 Add missing translations for filterCheckall in ru_RU. [#37311](https://github.com/ant-design/ant-design/pull/37311) [@HelLuv](https://github.com/HelLuv)
+- 🌐 Add missing translations in `cs_CZ`. [#37388](https://github.com/ant-design/ant-design/pull/37388) [@ZdenekKrcal](https://github.com/ZdenekKrcal)
+
+## 4.22.8
+
+`2022-08-26`
+
+- Table
+  - 🌐 Add Table missing French `filterCheckAll` localization. [#37246](https://github.com/ant-design/ant-design/pull/37246) [@Mar-he](https://github.com/Mar-he)
+  - 🐞 Improve Table sort panel accessibility experience. [#37167](https://github.com/ant-design/ant-design/pull/37167) [@dartamonov-vertex](https://github.com/dartamonov-vertex)
+- 💄 Optimize the button spacing of the Popconfirm component. [#37183](https://github.com/ant-design/ant-design/pull/37183) [@jiangmaniu](https://github.com/jiangmaniu)
+- 💄 Remove Card duplicate less style attribute definitions. [#37170](https://github.com/ant-design/ant-design/pull/37170) [@yanquanfahei](https://github.com/yanquanfahei)
+- TypeScript
+  - 🤖 Export Menu Item type declarations. [#36681](https://github.com/ant-design/ant-design/pull/36681) [@cravend](https://github.com/cravend)
+
+## 4.22.7
+
+`2022-08-21`
+
+- 🐞 Fix Typography visible change some time Tooltip not work with ellipsis. [#37147](https://github.com/ant-design/ant-design/pull/37147)
+- 🐞 Fix InputNumber that style cannot be customized with controls less variables. [#37070](https://github.com/ant-design/ant-design/pull/37070) [@coldice945](https://github.com/coldice945)
+
+## 4.22.6
+
+`2022-08-17`
+
+- 🐞 Revert [#36710](https://github.com/ant-design/ant-design/pull/36710) to fix Table `onChange` argument `sorter` error in multiple columns sort.
+- 🐞 Fix Drawer can not close when config `opacity` on the `maskStyle`. [#37100](https://github.com/ant-design/ant-design/pull/37100)
+
+## 4.22.5
+
+`2022-08-15`
+
+- 🇭🇺 Form add defaultValidateMessages.i18n az_AZ language #23369. [#36967](https://github.com/ant-design/ant-design/pull/36967) [@YMiemie-cy](https://github.com/YMiemie-cy)
+- 💄 Popover remove Popover incorrect box-shadow. [#37030](https://github.com/ant-design/ant-design/pull/37030) [@jerrykingxyz](https://github.com/jerrykingxyz)
+- 🐞 Fix Steps tail position bug when `labelPlacement="vertical"`. [#36996](https://github.com/ant-design/ant-design/pull/36996)
+- 💄 Removed exception error border for `Pagination`. [#36972](https://github.com/ant-design/ant-design/pull/36972) [@hydraZty](https://github.com/hydraZty)
+- 🐞 Fix Upload trigger mistake files status when upload multiple files at same time in React 18. [#36968](https://github.com/ant-design/ant-design/pull/36968)
+- TypeScript
+  - 🤖 Fix type error of useWatch. [#37013](https://github.com/ant-design/ant-design/pull/37013) [@LiZhiHao97](https://github.com/LiZhiHao97)
+
+## 4.22.4
+
+`2022-08-08`
+
+- 🐞 Fix Drawer `zIndex` prop not working. [#36958](https://github.com/ant-design/ant-design/pull/36958)
+- 💄 Fix PageHeader focus style stay after clicking it. [#36902](https://github.com/ant-design/ant-design/pull/36902)
+- 💄 Fix Drawer nesting content-wrapper style. [#36845](https://github.com/ant-design/ant-design/pull/36845) [@yanm1ng](https://github.com/yanm1ng)
+- 🐞 Fix Mentions popup shift when contain scrollbar. [#36898](https://github.com/ant-design/ant-design/pull/36898) [@JarvisArt](https://github.com/JarvisArt)
+- TypeScript
+  - 🤖 Fix Avatar `onClick` type missing. [#36940](https://github.com/ant-design/ant-design/pull/36940) [@kungege](https://github.com/kungege)
+  - 🤖 Fix Table `onChange` argument `sorter` type error. [#36710](https://github.com/ant-design/ant-design/pull/36710) [@kungege](https://github.com/kungege)
+  - 🤖 Input `data-*` should not be required. [#36858](https://github.com/ant-design/ant-design/pull/36858) [@yifanwww](https://github.com/yifanwww)
+
+## 4.22.3
+
+`2022-08-01`
+
+- 🐞 Fixed flickering when `fileList` updating in Uploader with React 18. [#36801](https://github.com/ant-design/ant-design/pull/36801) [@zhengjitf](https://github.com/zhengjitf)
+- 🐞 Fix Form.Item with small size `labelCol` and `wrapperCol` not break line in vertical layout. [#36800](https://github.com/ant-design/ant-design/pull/36800)
+- 🐞 Fix Row in flex layout takes too wide space by default. [#36770](https://github.com/ant-design/ant-design/pull/36770)
+
+## 4.22.2
+
+`2022-07-28`
+
+- 💄 Adjust Collapse title click region which will be fully width when `collapsible=default` now. [#36761](https://github.com/ant-design/ant-design/pull/36761)
+- Drawer
+  - 🐞 Fix Drawer not work in 360 browser. [#36748](https://github.com/ant-design/ant-design/pull/36748)
+  - 🐞 Revert back panel style into wrapper dom node in case developer use `contentWrapperStyle` for overwrite. [#36748](https://github.com/ant-design/ant-design/pull/36748)
+  - 🐞 Fix for the string type as `width/height` value and warning which should use number type instead. [#284](https://github.com/react-component/drawer/pull/284)
+
+## 4.22.1
+
+`2022-07-27`
+
+- 🐞 Fix Drawer with percentage width display issue. [#36729](https://github.com/ant-design/ant-design/pull/36729)
+
+## 4.22.0
+
+`2022-07-26`
+
+- Form
+  - 🔥 Form support `Form.Item.useStatus` for custom components to get Form.Item validate status. [#36486](https://github.com/ant-design/ant-design/pull/36486)
+  - 🆕 Form support `setFieldValue` to simplify config array index value. [#36058](https://github.com/ant-design/ant-design/pull/36058)
+  - 🐞 Fix Form.Item shaking when trigger validate so fast. [#36575](https://github.com/ant-design/ant-design/pull/36575)
+- 🆕 Radio.Group support `onBlur` and `onFocus` props. [#36041](https://github.com/ant-design/ant-design/pull/36041)
+- 🆕 Typography `ellipsis.tooltip` supports a object for Tooltip props. [#36099](https://github.com/ant-design/ant-design/pull/36099)
+- 🛠 Refactor Drawer to remove directly style control which helps more React way. [#36672](https://github.com/ant-design/ant-design/pull/36672)
+- 🛠 Refactor Sketelon.Button square shape style that its width is equal to height, and old become the default. [#36123](https://github.com/ant-design/ant-design/pull/36123) [@alanhaledc](https://github.com/alanhaledc)
+- 🐞 Fix Modal.confirm `onCancel` argument close is not a function sometimes. [#36600](https://github.com/ant-design/ant-design/pull/36600) [@Wxh16144](https://github.com/Wxh16144)
+- 🐞 Revert [#36439](https://github.com/ant-design/ant-design/pull/36439) to fix the problem of incorrect status when uploading and deleting files, and fix the status color change when Upload removes files again change problem. [#36706](https://github.com/ant-design/ant-design/pull/36706)
+- Tree
+  - 🛠 Tree/TreeSelect `switcherIcon` argument support more parameters from `{ expanded: boolean }` to `AntTreeNodeProps`. [#36651](https://github.com/ant-design/ant-design/pull/36651) [@alanhaledc](https://github.com/alanhaledc)
+  - 🐞 Fix Tree `draggable` Fn params type from AntTreeNode to DataNode. [#36648](https://github.com/ant-design/ant-design/pull/36648) [@tianyuan233](https://github.com/tianyuan233)
+- Table
+  - 💄 Fix Table extra shadow and scrollbar when all columns are fixed. [#36606](https://github.com/ant-design/ant-design/pull/36606) [@dashaowang](https://github.com/dashaowang)
+  - 💄 Fix Table tree data ellipsis style problem. [#36608](https://github.com/ant-design/ant-design/pull/36608)
+- 🌐 Localization
+  - 🇱🇰 Add Sri Lanka locale. [#36149](https://github.com/ant-design/ant-design/pull/36149) [@sayuri-gi](https://github.com/sayuri-gi)
+
+## 4.21.7
+
+`2022-07-18`
+
+- 🆕 Add Skeleton.Node sub-component, allow user customize content of Skeleton. [#36441](https://github.com/ant-design/ant-design/pull/36441) [@DawnLck](https://github.com/DawnLck)
+- Form
+  - 🐞 Fix Form with percentage width Select may leaves unexpected height. [#36484](https://github.com/ant-design/ant-design/pull/36484)
+  - 🐞 Fix Form disabled but Upload component still uploadable in it. [#36573](https://github.com/ant-design/ant-design/pull/36573) [@cwjTerrace](https://github.com/cwjTerrace)
+- 🐞 Fix Tree non-draggable element still render the draggable icon. [#36511](https://github.com/ant-design/ant-design/pull/36511) [@Wxh16144](https://github.com/Wxh16144)
+- 🐞 Fix Upload preview error on SVG with `<foreignObject>` and cross-origin links. [#36402](https://github.com/ant-design/ant-design/pull/36402) [@jonioni](https://github.com/jonioni)
+- 🐞 Fix that Tooltip cannot close automaticly on disabled Radio. [#36483](https://github.com/ant-design/ant-design/pull/36483)
+- 💄 Add Modal Less variable `@modal-border-radius`. [#36527](https://github.com/ant-design/ant-design/pull/36527) [@kkkisme](https://github.com/kkkisme)
+- 💄 Fix Table expand icon wrap style when column is fixed and ellipsis. [#36496](https://github.com/ant-design/ant-design/pull/36496)
+
+## 4.21.6
+
+`2022-07-11`
+
+- 🐞 Fix Skeleton active lost border-radius in Safari. [#36445](https://github.com/ant-design/ant-design/pull/36445)
+- 🐞 Fix Breadcrumb separators disappearing when used as last element in a List. [#36448](https://github.com/ant-design/ant-design/pull/36448) [@LeonKattendick](https://github.com/LeonKattendick)
+- 🐞 Fixed Upload removing file status color is wrong. [#36439](https://github.com/ant-design/ant-design/pull/36439)
+- 🐞 Fix DatePicker style issue when using `status`. [#35685](https://github.com/ant-design/ant-design/pull/35685) [@simplejason](https://github.com/simplejason)
+- Table
+  - 🐞 Fix Table scroll shadow style. [#36420](https://github.com/ant-design/ant-design/pull/36420) [@shunyue1320](https://github.com/shunyue1320)
+  - 🐞 Fix Table hover render performance issue. [#36383](https://github.com/ant-design/ant-design/pull/36383)
+- 💄 Adjust Modal header close icon style. [#36309](https://github.com/ant-design/ant-design/pull/36309) [@cw1997](https://github.com/cw1997)
+- 🐞 Fix Form.ErrorList shaking when validating too fast. [#36358](https://github.com/ant-design/ant-design/pull/36358)
+- 💄 Radio shadow color should be transparency to fit none-white background. [#36335](https://github.com/ant-design/ant-design/pull/36335)
+- 🐞 Fix Table border style issue when `title` configured. [#36384](https://github.com/ant-design/ant-design/pull/36384) [@Unuuuuu](https://github.com/Unuuuuu)
+
 ## 4.21.5
 
 `2022-07-03`
@@ -35,7 +274,7 @@ timeline: true
   - 💄 Fix nested Table margin style. [#36209](https://github.com/ant-design/ant-design/pull/36209)
   - 🐞 Fix Table filter dropdown with multiple subMenu may not closed. [#36132](https://github.com/ant-design/ant-design/pull/36132)
   - 🐞 Table reset the last selection key when deselect or bulk operations. [#34705](https://github.com/ant-design/ant-design/pull/34705) [@Dunqing](https://github.com/Dunqing)
-- 🐞 Fix Popover arrow color with custom `color` prop. [#36241](https://github.com/ant-design/ant-design/pull/36241) [@MadCcc](https://github.com/MadCcc)
+- 🐞 Fix Popover arrow color with custom `color` prop. [#36241](https://github.com/ant-design/ant-design/pull/36241)
 - 🐞 Fix Upload `listType="picture-card"` select button not being hidden when children is empty. [#36196](https://github.com/ant-design/ant-design/pull/36196)
 - 🐞 Fix Menu deprecated warning when `item={undefined}`. [#36190](https://github.com/ant-design/ant-design/pull/36190)
 - 💄 Fix Button `loading` icon margin style lost. [#36168](https://github.com/ant-design/ant-design/pull/36168)
@@ -117,7 +356,7 @@ timeline: true
 - 🐞 Fix Drawer close twice `children` will undefined. [#35853](https://github.com/ant-design/ant-design/pull/35853) [@crazyair](https://github.com/crazyair)
 - Skeleton
   - 💄 Remove Skeleton default `margin-top` style. [#35848](https://github.com/ant-design/ant-design/pull/35848)
-  - 💄 Optimize Skeleton `active` animation perfermance. [#35836](https://github.com/ant-design/ant-design/pull/35836) [@slotDumpling](https://github.com/slotDumpling)
+  - 💄 Optimize Skeleton `active` animation performance. [#35836](https://github.com/ant-design/ant-design/pull/35836) [@slotDumpling](https://github.com/slotDumpling)
 - 💄 Remove `!important` in Radio style with `disabled`. [#35920](https://github.com/ant-design/ant-design/pull/35920)
 - TypeScript
   - 🤖 Fix Form.List type `FormListFieldData` missing property `fieldKey`. [#35884](https://github.com/ant-design/ant-design/pull/35884) [@nanianlisao](https://github.com/nanianlisao)
@@ -258,7 +497,7 @@ timeline: true
 - Less
   - 💄 Replace less html selector with related variable. [#35186](https://github.com/ant-design/ant-design/pull/35186) [@jeffdrumgod](https://github.com/jeffdrumgod)
   - 💄 Modify less `danger` value from the function to variable. [#35113](https://github.com/ant-design/ant-design/pull/35113) [@TrickyPi](https://github.com/TrickyPi)
-  - 🐞 Arrow border radius variable use fixed value. [#35086](https://github.com/ant-design/ant-design/pull/35086) [@MadCcc](https://github.com/MadCcc)
+  - 🐞 Arrow border radius variable use fixed value. [#35086](https://github.com/ant-design/ant-design/pull/35086)
 - TypeScript
   - 🤖 Fixed `Upload` component `UploadChangeParam<T>` internal `fileList` not using generics. [#35158](https://github.com/ant-design/ant-design/pull/35158) [@rendaoer](https://github.com/rendaoer)
   - 🤖 Update TypeScript definition for `@types/react@18` compatible. [#35075](https://github.com/ant-design/ant-design/pull/35075) [@AliRezaBeigy](https://github.com/AliRezaBeigy) [#35076](https://github.com/ant-design/ant-design/pull/35076) [@littledian](https://github.com/littledian)
@@ -413,7 +652,7 @@ timeline: true
 - 💄 Improve Menu `:focus-visible` style. [#34008](https://github.com/ant-design/ant-design/pull/34008)
 - 💄 Fix Pagination and Rate style problem in Safari. [#34002](https://github.com/ant-design/ant-design/pull/34002)
 - 💄 Fix Row and Col component styles when using prefixCls. [#33969](https://github.com/ant-design/ant-design/pull/33969) [@mic-web](https://github.com/mic-web)
-- 🐞 Fix Timeline icons with custom color not working. [#33951](https://github.com/ant-design/ant-design/pull/33951) [@MadCcc](https://github.com/MadCcc)
+- 🐞 Fix Timeline icons with custom color not working. [#33951](https://github.com/ant-design/ant-design/pull/33951)
 - TypeScript
   - 🤖 Optimize Cascader `onChange` definition with `multiple` prop. [#33947](https://github.com/ant-design/ant-design/pull/33947) [@babycannotsay](https://github.com/babycannotsay)
 
@@ -472,7 +711,7 @@ timeline: true
 
 - 🆕 Menu support `home` and `end` keyboard navigate. [#33642](https://github.com/ant-design/ant-design/pull/33642) [@dartamonov-vertex](https://github.com/dartamonov-vertex)
 - Table
-  - ⚡️ Improve Table perfermance significantly when mount and unmount. [#33554](https://github.com/ant-design/ant-design/pull/33554)
+  - ⚡️ Improve Table performance significantly when mount and unmount. [#33554](https://github.com/ant-design/ant-design/pull/33554)
   - 🐞 Fix Table emptynode fixed display. [#33610](https://github.com/ant-design/ant-design/pull/33610) [@hemengke1997](https://github.com/hemengke1997)
   - 🐞 Fix Table tree data hover error. [#33638](https://github.com/ant-design/ant-design/pull/33638) [@LongHaoo](https://github.com/LongHaoo)
 - Form
@@ -496,7 +735,7 @@ timeline: true
 
 `2021-12-29`
 
-- 🐞 Fix Popconfirm throws `Can't perform a React state update on an unmounted component.` warning in some async case. [#33432](https://github.com/ant-design/ant-design/pull/33432) [@MadCcc](https://github.com/MadCcc)
+- 🐞 Fix Popconfirm throws `Can't perform a React state update on an unmounted component.` warning in some async case. [#33432](https://github.com/ant-design/ant-design/pull/33432)
 - 🐞 Fix Input with `suffix` will crash when `value` is number type. [#33462](https://github.com/ant-design/ant-design/pull/33462)
 - 🐞 Fix Divider with text dashed border color error. [#33452](https://github.com/ant-design/ant-design/pull/33452) [@chen-jingjie](https://github.com/chen-jingjie)
 - 🐞 Fix Dropdown.Button not support `destroyPopupOnHide`. [#33442](https://github.com/ant-design/ant-design/pull/33442) [@LongHaoo](https://github.com/LongHaoo)
@@ -1227,7 +1466,7 @@ Wrong release is the same as `4.12.0`, if you need to lock the version, you need
   - 🐞 Fix multiple Image.PreviewGroup contain same image. [#28881](https://github.com/ant-design/ant-design/issues/28881)
 - ConfigProvider
   - 🆕 ConfigProvider supports `iconPrefixCls`. [#28924](https://github.com/ant-design/ant-design/pull/28924)
-  - ⚡️ Optimize ConfigProvider props updating perfermance. [#28792](https://github.com/ant-design/ant-design/pull/28792) [@zxc0328](https://github.com/zxc0328)
+  - ⚡️ Optimize ConfigProvider props updating performance. [#28792](https://github.com/ant-design/ant-design/pull/28792) [@zxc0328](https://github.com/zxc0328)
 - 💄 Tweak TreeSelect filter highlight color. [#28984](https://github.com/ant-design/ant-design/pull/28984)
 - 💄 Fix Select item align style with custom `tagRender`. [#28962](https://github.com/ant-design/ant-design/pull/28962)
 - Form
@@ -2262,7 +2501,7 @@ It is a wrong release which same as `4.10.3`, don't use it.
 - 💄 Add Menu default `text-align` style. [#24253](https://github.com/ant-design/ant-design/pull/24253)
 - 🛠 Refactor List code. [#24280](https://github.com/ant-design/ant-design/pull/24280) [@hengkx](https://github.com/hengkx)
 - 🛠 Modify the Alert with hooks to support strict mode. [#24236](https://github.com/ant-design/ant-design/pull/24236) [@hengkx](https://github.com/hengkx)
-- 🐞Fix Card perfermance bug when use with `react-split`. [#24425](https://github.com/ant-design/ant-design/pull/24425)
+- 🐞Fix Card performance bug when use with `react-split`. [#24425](https://github.com/ant-design/ant-design/pull/24425)
 - TypeScript
   - 🛠Cascader ts definition update. [#24393](https://github.com/ant-design/ant-design/pull/24393) [@zhangyu1818](https://github.com/zhangyu1818)
   - 🐞 Fix TS error of `Could not find a declaration rc-upload`. [#24325](https://github.com/ant-design/ant-design/pull/24325)
@@ -2552,7 +2791,7 @@ It is a wrong release which same as `4.10.3`, don't use it.
 - 💄 Adjust RangePicker arrow style. [#22847](https://github.com/ant-design/ant-design/pull/22847)
 - 🐞 Fix Text with `ellipsis` align issue. [#22836](https://github.com/ant-design/ant-design/pull/22836)
 - 💄 Tweak `@info-color` should be `@primary-color` defaultly. [#22723](https://github.com/ant-design/ant-design/pull/22723)
-- 🐞 Fix BackTop not working in iframe and improve it's perfermance. [#22788](https://github.com/ant-design/ant-design/pull/22788)
+- 🐞 Fix BackTop not working in iframe and improve it's performance. [#22788](https://github.com/ant-design/ant-design/pull/22788)
 - 🐞 Fix Select inconsistent height when `mode="multiple"` and `size="large" />`. [#22904](https://github.com/ant-design/ant-design/pull/22904)
 - 🐞 Fix Radio less variable. [#22803](https://github.com/ant-design/ant-design/pull/22803) [@yoyo837](https://github.com/yoyo837)
 - 🐞 Fix Card Tabs do not support small size. [#22666](https://github.com/ant-design/ant-design/pull/22666) [@MrHeer](https://github.com/MrHeer)
@@ -2733,7 +2972,7 @@ It is a wrong release which same as `4.10.3`, don't use it.
 
 - Form
   - 🐞 Fix nest Form.Item dynamic remove will warning in React. [#21896](https://github.com/ant-design/ant-design/pull/21896)
-  - ⚡️ Form `useForm` now return same instance for perfermance. [#21927](https://github.com/ant-design/ant-design/pull/21927)
+  - ⚡️ Form `useForm` now return same instance for performance. [#21927](https://github.com/ant-design/ant-design/pull/21927)
   - ⚡️ Refactor Form.Item render logic that will only render once when children is a pure component. [#21991](https://github.com/ant-design/ant-design/pull/21991)
   - ⚡️ FormContext use a memoized value to avoid trigger FormItem's unintentional renders. [#21980](https://github.com/ant-design/ant-design/pull/21980) [@qiqiboy](https://github.com/qiqiboy)
 - Table

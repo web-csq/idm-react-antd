@@ -7,6 +7,7 @@ import Input from '..';
 import mountTest from '../../../tests/shared/mountTest';
 import rtlTest from '../../../tests/shared/rtlTest';
 import Form from '../../form';
+import { triggerFocus } from '../Input';
 
 describe('Input', () => {
   const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -272,12 +273,14 @@ describe('should support showCount', () => {
     const { container } = render(
       <Input
         maxLength={5}
-        showCount={{ formatter: ({ count, maxLength }) => `${count}, ${maxLength}` }}
+        showCount={{
+          formatter: ({ value, count, maxLength }) => `${value}, ${count}, ${maxLength}`,
+        }}
         value="12345"
       />,
     );
     expect(container.querySelector('input')?.getAttribute('value')).toBe('12345');
-    expect(container.querySelector('.ant-input-show-count-suffix')?.innerHTML).toBe('5, 5');
+    expect(container.querySelector('.ant-input-show-count-suffix')?.innerHTML).toBe('12345, 5, 5');
   });
 });
 
@@ -380,7 +383,7 @@ describe('Input allowClear', () => {
     fireEvent.mouseUp(container.querySelector('.ant-input-clear-icon')!);
     fireEvent.focus(container.querySelector('.ant-input-clear-icon')!);
     fireEvent.click(container.querySelector('.ant-input-clear-icon')!);
-    expect(onBlur).not.toBeCalled();
+    expect(onBlur).not.toHaveBeenCalled();
     unmount();
   });
 
@@ -431,7 +434,7 @@ describe('Input allowClear', () => {
   });
 });
 
-describe('typescript types ', () => {
+describe('typescript types', () => {
   it('InputProps type should support data-* attributes', () => {
     const props: InputProps = {
       value: 123,
@@ -444,5 +447,13 @@ describe('typescript types ', () => {
     const input = container.querySelector('input');
     expect(input?.getAttribute('data-testid')).toBe('test-id');
     expect(input?.getAttribute('data-id')).toBe('12345');
+  });
+});
+
+describe('triggerFocus', () => {
+  it('triggerFocus correctly run when element is null', () => {
+    expect(() => {
+      triggerFocus();
+    }).not.toThrow();
   });
 });
